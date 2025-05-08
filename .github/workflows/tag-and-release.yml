@@ -10,8 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
 
     steps:
+      - name: Fail if push not from PR or trusted user
+        run: |
+          echo "Pusher: ${{ github.actor }}"
+          TRUSTED_USERS=""
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.actor }}" != *"${TRUSTED_USERS}"* ]]; then
+            echo "❌ Push diretto su main non permesso per utenti non autorizzati."
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
