@@ -72,24 +72,3 @@ jobs:
           tag_name: ${{ env.NEW_TAG }}
           name: Release ${{ env.NEW_TAG }}
           body_path: changes.txt
-
-      - name: Send email with release link
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.MAIL_SERVER }}
-          server_port: ${{ secrets.MAIL_PORT }}
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "Nuova Release ${{ env.NEW_TAG }} disponibile"
-          to: "tuo-indirizzo@email.it"
-          from: ${{ secrets.MAIL_USERNAME }}
-          body: |
-            Ciao!
-
-            È stata pubblicata una nuova release: **${{ env.NEW_TAG }}**.
-
-            👉 Visualizzala qui:
-            ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.NEW_TAG }}
-
-            --
-            GitHub Actions
