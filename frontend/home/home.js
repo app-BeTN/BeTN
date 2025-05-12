@@ -35,7 +35,7 @@ function renderAuthButtons() {
     `;
   } else {
     container.innerHTML = `
-      <button class="btn btn-primary" onclick="location.href='./../login/login.html'">Login</button>
+      <button class="btn btn-primary" onclick="location.href='./../signup/signup.html'">Login</button>
     `;
   }
 }
