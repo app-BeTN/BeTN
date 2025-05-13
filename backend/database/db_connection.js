@@ -1,14 +1,16 @@
+const mongoose = require('mongoose');
 
-const { MongoClient } = require("mongodb");
-
-const uri = "mongodb+srv://belnic03nb:betndatabase@betn-db.zrpk9fl.mongodb.net/";
-const client = new MongoClient(uri);
-
-async function connectDB() {
-  if (!client.topology?.isConnected()) {
-    await client.connect();
+async function connectToMongoDB() {
+  try {
+    await mongoose.connect('mongodb+srv://belnic03nb:betndatabase@betn-db.zrpk9fl.mongodb.net/', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log('Connesso a MongoDB');
+  } catch (err) {
+    console.error('Errore connessione MongoDB:', err);
   }
-  return client.db("betn");
 }
 
-module.exports = { connectDB };
+module.exports = connectToMongoDB;
+
