@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ambiente
+.env
+.env.*.local
+*.local
+
+# Build output
+dist/
+build/
+
+# vscode
+.vscode/
+
+
+# File Log
+*.log
+
+# Test coverage
+coverage/
+
+# Linux/Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# TypeScript
+*.tsbuildinfo
+
+# Next.js / Vite / React
+.next/
+out/
+.vercel/
+.cache/
+.svelte-kit/
+
+# MongoDB dump/temp
+dump/
+*.mongodb/
+
+# Altri backup
+*.bak
+*.swp
+*.tmp
