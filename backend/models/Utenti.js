@@ -6,9 +6,9 @@ const utenteSchema = new mongoose.Schema({
   password: { type: String, required: true },
   tipo: { type: String, enum: ["privato", "azienda", "comune", "admin"], required: true },
   azienda: { type: String, default: null },
-  eventiIscritti: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Evento' }]
+  //eventiIscritti: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Evento' }]
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Utente', utenteSchema);
+module.exports = mongoose.model('Utente', utenteSchema, 'utenti');
