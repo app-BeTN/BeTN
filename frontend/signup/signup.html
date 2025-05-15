@@ -1,27 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Registrazione - BeTN</title>
   <link rel="stylesheet" href="/style/signup.css">
 </head>
+
 <body>
   <div class="signup-container">
     <h1>Crea un account BeTN</h1>
-    
+
     <form id="signup-form">
       <input type="text" id="nome" placeholder="Nome utente" required>
       <input type="email" id="email" placeholder="Email" required>
-      <input type="text" id="piva" placeholder="Partita IVA" style="display:none;" required>
+      <input type="text" id="piva" placeholder="Partita IVA" style="display:none;">
       <input type="password" id="password" placeholder="Password" required>
+      <small id="regole-password" style="color: #555; font-size: 0.85rem; display: block; margin-top: 0px; margin-bottom: 10px;">La password
+        deve contenere almeno 6 caratteri, una lettera maiuscola, un numero e un simbolo (!@#$%^&*).</small>
       <input type="password" id="conferma-password" placeholder="Conferma Password" required>
+      <small id="errore-password" style="color: red; display:none; margin-top: -15px; margin-bottom: 5px;">Le password non corrispondono</small>
       <select id="tipo" required onchange="gestisciTipoUtente()">
         <option value="privato">Privato</option>
         <option value="azienda">Azienda</option>
       </select>
-      <button type="submit">Registrati</button>
+      <button id="signup-btn" type="submit">Registrati</button>
     </form>
 
     <div class="divider">oppure</div>
@@ -31,4 +35,5 @@
 
   <script src="/signup/signup.js"></script>
 </body>
+
 </html>

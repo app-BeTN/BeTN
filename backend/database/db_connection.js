@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 async function connectToMongoDB() {
   try {
-    await mongoose.connect('mongodb+srv://belnic03nb:betndatabase@betn-db.zrpk9fl.mongodb.net/', {
+    await mongoose.connect('mongodb+srv://belnic03nb:betndatabase@betn-db.zrpk9fl.mongodb.net/BeTN', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -13,4 +13,3 @@ async function connectToMongoDB() {
 }
 
 module.exports = connectToMongoDB;
-

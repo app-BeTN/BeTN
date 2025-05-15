@@ -56,6 +56,20 @@ button[type="submit"] {
   cursor: pointer;
 }
 
+input.input-error {
+  border: 2px solid #e74c3c;
+  background-color: #fff5f5;
+  color: #c0392b;
+}
+
+#errore-password {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-top: 1px;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
 .divider {
   margin: 1rem 0;
   color: var(--text-muted);
@@ -69,4 +83,51 @@ button[type="submit"] {
   border: none;
   border-radius: 12px;
   cursor: pointer;
+}
+
+
+.input-error {
+  border: 6px solid #e74c3c;
+  background-color: #fff5f5;
+  color: red;
+}
+
+.tooltip-box {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-box .tooltip-content {
+  visibility: hidden;
+  background-color: #f0f0f0;
+  color: #333;
+  text-align: left;
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.85rem;
+  width: 250px;
+  position: absolute;
+  top: -5px;
+  left: 105%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip-box .tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent #ccc transparent transparent;
+}
+
+.tooltip-box:hover .tooltip-content,
+.tooltip-box input:focus + .tooltip-content {
+  visibility: visible;
+  opacity: 1;
 }
