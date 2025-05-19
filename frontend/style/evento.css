@@ -1,0 +1,58 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.evento-container {
+  max-width: 600px;
+  margin: auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.evento-container h1 {
+  margin-bottom: 10px;
+}
+
+.evento-container p {
+  margin: 8px 0;
+}
+
+#iscriviti-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#iscriviti-btn:hover {
+  background-color: #0056b3;
+}
+
+#iscriviti-btn[disabled] {
+  background-color: #cccccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+#esci-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#esci-btn:hover {
+  background-color: #777;
+}

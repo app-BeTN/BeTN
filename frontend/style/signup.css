@@ -131,3 +131,10 @@ input.input-error {
   visibility: visible;
   opacity: 1;
 }
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  text-align: left;
+}
