@@ -64,6 +64,18 @@ body {
   transition: 0.2s;
 }
 
+.btnCreaEvento {
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+  color: white;
+  background-color: #005fcc;
+}
+
 .btn-primary {
   background-color: var(--primary);
   color: white;
@@ -100,3 +112,4 @@ body {
   color: var(--text-muted);
   font-size: 0.8rem;
 }
+

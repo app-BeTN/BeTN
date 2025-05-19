@@ -20,14 +20,19 @@ function gestisciTipoUtente() {
   const tipo = document.getElementById("tipo").value;
   const campoPiva = document.getElementById("piva");
   const campoNome = document.getElementById("nome");
+  const labelPiva = document.getElementById("labalPiva");
 
   if (tipo === "azienda") {
     document.getElementById("piva").required = true;
     campoPiva.style.display = "block";
+    labelPiva.style.display = "block";
+    labelPiva = "Nome azienda";
     campoNome.placeholder = "Nome azienda";
   } else {
     document.getElementById("piva").required = false;
     campoPiva.style.display = "none";
+    labelPiva.style.display = "none";
+    labelPiva = "Nome utente";
     campoNome.placeholder = "Nome utente";
   }
 }
@@ -35,6 +40,13 @@ function gestisciTipoUtente() {
 //listener_signUp_btn_onclick
 document.getElementById('signup-btn').addEventListener('click', async (e) => {
   e.preventDefault();
+
+  const form = document.getElementById("signup-form");
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
 
   //prende_in_input_i_valori_dal_form
   const nome = document.getElementById("nome").value.trim();
@@ -47,7 +59,6 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
 
   //check_dei_campi_in_input
   if (!nome || !email || !password || !confermaPassword || !tipo) {
-    alert("COMPILARE TUTTI I CAMPI");
     return;
   }
 

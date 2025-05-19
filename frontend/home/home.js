@@ -8,7 +8,7 @@ const eventi = [
   }
 ];
 
-
+//Bottoni
 window.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const container = document.getElementById("auth-buttons");
@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  
+
   const res = await fetch('/api/me', {
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (res.ok) {
     const data = await res.json();
     container.innerHTML = `
+      <button id="creaEvento-btn" class="btnCreaEvento" onclick="location.href='./../creaEvento/creaEvento.html'">Crea Evento</button>
       <span id="nome-utente" class="nome-utente">${data.nome}</span>
       <button id="logout-btn" class="btn btn-secondary" onclick="logout()">Logout</button>
     `;
