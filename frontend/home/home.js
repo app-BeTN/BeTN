@@ -35,6 +35,47 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+//Lista eventi
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("eventi-container");
+  
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("/eventi", {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
+
+    const eventi = await res.json();
+
+    if (eventi.length === 0) {
+      container.innerHTML = "<p>Nessun evento disponibile.</p>";
+      return;
+    }
+
+    eventi.forEach(evento => {
+      const card = document.createElement("div");
+      card.className = "card-evento";
+      card.innerHTML = `
+        <h3>${evento.nome}</h3>
+        <p><strong>Data:</strong> ${new Date(evento.data).toLocaleDateString("it-IT")}</p>
+        <p><strong>Luogo:</strong> ${evento.luogo}</p>
+        <span class="badge ${evento.tipoVisibilita}">${evento.tipoVisibilita}</span>
+      `;
+      card.addEventListener("click", () => {
+        window.location.href = `./../evento/evento.html?id=${evento._id}`;
+      });
+
+      container.appendChild(card);
+    });
+  } catch (err) {
+    container.innerHTML = "<p>Errore nel caricamento degli eventi.</p>";
+    console.error(err);
+  }
+});
+
+
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/home/home.html";
