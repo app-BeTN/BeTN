@@ -10,6 +10,7 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     const luogo = document.getElementById("luogo").value.trim();
     const tipoEvento = document.getElementById("tipoEvento").value.trim();
     const postiDisponibili = document.getElementById("postiDisponibili").value.trim();
+    const tipoVisibilita = document.getElementById("tipoVisibilita").value;
 
     const erroreData = document.getElementById("errore-data");
     const erroreOra = document.getElementById("errore-ora");
@@ -45,13 +46,13 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     const response = await fetch("/api/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, descrizione, data, ora, luogo, tipoEvento, postiDisponibili })
+        body: JSON.stringify({ nome, descrizione, data, ora, luogo, tipoEvento, postiDisponibili, tipoVisibilita })
     });
 
     const result = await response.json();
 
     if (response.ok) {
-        const eventId = result.eventId;
+        //const eventId = result.eventId;
         //window.location.href = `./../evento/evento.html?id=${eventId}`;
         window.location.href = `./../home/home.html`;
     } else {

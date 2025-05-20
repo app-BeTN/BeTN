@@ -7,10 +7,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  const iscritto = JSON.parse(localStorage.getItem("iscrizioni")) || [];
+  const token = localStorage.getItem("token");
+  const btn = document.getElementById("iscriviti-btn");
 
   try {
-    const res = await fetch(`/event/${eventId}`);
+    const res = await fetch(`/event/${eventId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+
     if (!res.ok) {
       document.body.innerHTML = "<p>Errore nel recupero dell'evento.</p>";
       return;
@@ -19,46 +23,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     const event = await res.json();
 
     document.getElementById("titolo-evento").textContent = event.nome;
+    document.getElementById("categoria").textContent = event.tipoEvento;
     document.getElementById("descrizione-evento").textContent = event.descrizione;
-    const dataFormattata = new Date(event.data).toLocaleDateString("it-IT");
-    document.getElementById("data-evento").textContent = dataFormattata;
+    document.getElementById("data-evento").textContent = new Date(event.data).toLocaleDateString("it-IT");
     document.getElementById("ora-evento").textContent = event.ora;
     document.getElementById("luogo-evento").textContent = event.luogo;
     document.getElementById("posti-disponibili").textContent = event.postiDisponibili;
     document.getElementById("posti-occupati").textContent = event.postiOccupati ?? 0;
 
-    const btn = document.getElementById("iscriviti-btn");
-
-    if (iscritto.includes(eventId)) {
+    if (!token) {
       btn.disabled = true;
-      btn.textContent = "Iscritto";
+      btn.textContent = "Accedi per iscriverti";
+    } else if (event.postiOccupati >= event.postiDisponibili) {
+      btn.disabled = true;
+      btn.textContent = "Posti esauriti";
+      btn.classList.add("btn-esaurito");
+    } else if (event.giàIscritto) {
+      btn.disabled = true;
+      btn.textContent = "Già iscritto";
     } else {
       btn.addEventListener("click", async () => {
         const res = await fetch(`/event/${eventId}/iscriviti`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
         });
 
-        const result = await res.json();
-
         if (res.ok) {
-          // Salva l'iscrizione localmente
-          iscritto.push(eventId);
-          localStorage.setItem("iscrizioni", JSON.stringify(iscritto));
           location.reload();
-        } else {
-          alert("Errore: " + result.message);
         }
       });
     }
 
-    // Gestione bottone Esci
-    document.getElementById("esci-btn").addEventListener("click", () => {
-      window.location.href = "./../home/home.html";
-    });
+    // Bottone "Esci"
+    const esciBtn = document.getElementById("esci-btn");
+    if (esciBtn) {
+      esciBtn.addEventListener("click", () => {
+        window.location.href = "./../home/home.html";
+      });
+    }
 
   } catch (error) {
+    console.error("Errore caricamento evento:", error);
     document.body.innerHTML = "<p>Errore di rete nel caricamento dell'evento.</p>";
-    console.error(error);
   }
 });
