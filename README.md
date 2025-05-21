@@ -31,14 +31,15 @@ Entrare nella cartella clonata e muoversi dentro `backend`:
 cd BeTN/BeTN_swagger/backend
 ```
 
+Eseguire i seguenti comandi:
+```bash
+npm install
+npm install cors swagger-ui-express yamljs
+```
+
 Eseguire il codice con il seguente comando:
 ```bash
 node server.js
-```
-
-Eseguire il seguente codice (se necessario):
-```bash
-npm install
 ```
 
 
