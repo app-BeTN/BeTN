@@ -1,11 +1,8 @@
 # BeTN
 
-Nicolò Bellè
-  - unitn mail: nicolo.belle@studenti.unitn.it - ID: 238178
-Riccardo Bassan
-  - unitn mail: riccardo.bassan@studenti.unitn.it - ID: 238793
-Andrea Costantino
-  - unitn mail: andrea.costantino-1@studenti.unitn.it - ID: 237768
+- Nicolò Bellè - unitn mail: nicolo.belle@studenti.unitn.it - ID: 238178
+- Riccardo Bassan - unitn mail: riccardo.bassan@studenti.unitn.it - ID: 238793
+- Andrea Costantino - unitn mail: andrea.costantino-1@studenti.unitn.it - ID: 237768
 
 ### ESECUZIONE DEL CODICE PER PROVARE LE API CON SWAGGER
 
