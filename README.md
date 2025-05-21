@@ -42,6 +42,11 @@ Eseguire il codice con il seguente comando:
 node server.js
 ```
 
+Per visualizzare la GUI di swagger nel browser copiare il link presente nel terminale, o quello qua sotto prestando attenzione se viene modificata la porta `3006`:
+```bash
+http://localhost:3006/api-docs
+```
+
 
 
 
