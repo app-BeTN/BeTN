@@ -28,7 +28,7 @@ git clone https://github.com/app-BeTN/BeTN/
 
 Entrare nella cartella clonata e muoversi dentro `backend`:
 ```bash
-cd BeTN/backend
+cd BeTN/BeTN_swagger/backend
 ```
 
 Eseguire il codice con il seguente comando:
