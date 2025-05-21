@@ -14,7 +14,7 @@ Andrea Costantino
 
 Copiare il link della repository:
 ```bash
-[https://github.com/app-BeTN/BeTN/](https://github.com/app-BeTN/BeTN/)
+https://github.com/app-BeTN/BeTN/
 ```
 
 Aprire il terminale (su macOS o Linux) oppure Prompt dei comandi (su Windows).
