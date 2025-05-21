@@ -1,3 +1,9 @@
+/* home.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 :root {
   --primary: #007AFF;
   --background: #F9FAFB;
@@ -7,27 +13,52 @@
   --border: #E5E5EA;
   --font: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
 }
-
+html,
 body {
-  margin: 0;
-  font-family: var(--font);
-  background-color: var(--background);
-  color: var(--text-main);
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
 }
 
 .top-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
+  justify-content: space-between;
+  padding: 2.5rem;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #E5E5EA;
 }
 
-.event-container {
-  max-width: 800px;
-  margin: auto;
+#auth-buttons {
+  position: absolute;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer {
+  text-align: center;
   padding: 1rem;
+  color: #6e6e73;
+  font-size: 0.8rem;
+}
+
+/* Overlay di sfondo */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  z-index: 1000;
+}
+#overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .event-card {
@@ -53,67 +84,138 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.event-description {
-  margin-bottom: 1rem;
-}
-
-.btn {
+/* Bottoni Login & Crea Evento */
+#login-btn,
+#creaEvento-btn {
+  height: 40px;
+  padding: 0 14px;
+  background: linear-gradient(135deg,#0066cc,#3399ff);
+  color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 14px;
   cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.btnCreaEvento {
-  border: none;
-  border-radius: 12px;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-  color: white;
-  background-color: #005fcc;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #005fcc;
-}
-
-.btn-secondary {
-  background-color: var(--text-muted);
-  color: white;
-}
-
-.user-bar {
-  display: flex;
-  justify-content: flex-end;
+  display: inline-flex;
   align-items: center;
-  padding: 1rem;
-  background-color: #f2f2f2;
-  border-bottom: 1px solid #ccc;
-  gap: 0.75rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+#login-btn:hover,
+#creaEvento-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.nome-utente {
+/* Dropdown container (shrink-wrap header) */
+#dropdown {
+  position: relative;
+  display: inline-block;
+  z-index: 1001; /* sopra overlay */
+}
+
+/* Header del dropdown */
+#dropdown-header {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg,#0066cc,#3399ff);
+  padding: 0 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  user-select: none;
+}
+#dropdown-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+#dropdown-header span {
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.95rem;
-  color: #444;
+  color: #fff;
 }
 
-.footer {
-  text-align: center;
-  padding: 1rem;
-  color: var(--text-muted);
-  font-size: 0.8rem;
+/* Nascondi l’<img> originale */
+#dropdown-header img {
+  display: none;
+}
+
+/* Avatar placeholder */
+.avatar-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.avatar-placeholder svg {
+  width: 18px;
+  height: 18px;
+  fill: #fff;
+}
+
+/* Voci del menu: larghezza basata solo sul contenuto interno */
+#dropdown-items {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;                  /* allineata a destra dell’header */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  display: none;
+  overflow: hidden;
+  width: max-content;        /* dimensiona in base alle parole interne */
+}
+
+/* Cascading animation */
+#dropdown.open #dropdown-items {
+  display: block;
+}
+#dropdown-items .menu-item {
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: fadeInItem 0.35s forwards;
+}
+#dropdown.open #dropdown-items .menu-item:nth-child(1) { animation-delay: 0.1s; }
+#dropdown.open #dropdown-items .menu-item:nth-child(2) { animation-delay: 0.2s; }
+#dropdown.open #dropdown-items .menu-item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes fadeInItem {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Stile delle singole voci */
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+.menu-item svg {
+  width: 18px;
+  height: 18px;
+  fill: #555;
+  flex-shrink: 0;
+  margin-right: 8px;
+  transition: fill 0.25s;
+}
+.menu-item:hover {
+  background: #e8f0fe;
+  color: #003e99;
+}
+.menu-item:hover svg {
+  fill: #003e99;
 }
 
 .eventi-grid {

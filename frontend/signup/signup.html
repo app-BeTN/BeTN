@@ -15,56 +15,60 @@
     <form id="signup-form">
 
       <div class="form-group">
-        <label for="nome">Nome utente</label>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" placeholder="Nome utente" required>
       </div>
-      <input type="text" id="nome" placeholder="Nome utente" required>
 
       <div class="form-group">
         <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Email" required>
       </div>
-      <input type="email" id="email" placeholder="Email" required>
-
 
       <div class="form-group">
         <label for="piva" id="labalPiva" style="display:none;">P.IVA</label>
       </div>
       <input type="text" id="piva" placeholder="Partita IVA" style="display:none;">
 
-
       <div class="form-group">
         <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="button" class="password-toggle" data-target="password">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
+            <circle cx="12" cy="12" r="2.5" />
+          </svg>
+        </button>
+        <small id="regole-password"
+          style="color: #6e6e73; font-size: 0.58rem; display: block; margin-top: -13px; margin-bottom: 10px; text-align:center;">Deve
+          contenere almeno 6 caratteri, una lettera maiuscola, un numero e un simbolo (!@#$%^&*).</small>
       </div>
-      <input type="password" id="password" placeholder="Password" required>
-      <small id="regole-password"
-        style="color: #555; font-size: 0.85rem; display: block; margin-top: 0px; margin-bottom: 10px;">La password
-        deve contenere almeno 6 caratteri, una lettera maiuscola, un numero e un simbolo (!@#$%^&*).</small>
 
       <div class="form-group">
         <label for="conferma-password">Conferma password</label>
+        <input type="password" id="conferma-password" placeholder="Conferma Password" required>
+        <button type="button" class="password-toggle" data-target="conferma-password">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
+            <circle cx="12" cy="12" r="2.5" />
+          </svg>
+        </button>
+        <small id="errore-password" style="color: red; display:none; margin-top: -15px; margin-bottom: 5px;">Le password
+          non corrispondono</small>
       </div>
-      <input type="password" id="conferma-password" placeholder="Conferma Password" required>
-      <small id="errore-password" style="color: red; display:none; margin-top: -15px; margin-bottom: 5px;">Le password
-        non corrispondono</small>
-
 
       <div class="form-group">
         <label for="tipo">Tipo di account</label>
+        <select id="tipo" required onchange="gestisciTipoUtente()">
+          <option value="privato">Privato</option>
+          <option value="azienda">Azienda</option>
+        </select>
       </div>
-      <select id="tipo" required onchange="gestisciTipoUtente()">
-        <option value="privato">Privato</option>
-        <option value="azienda">Azienda</option>
-      </select>
-
 
       <button id="signup-btn" type="submit">Registrati</button>
+      <p class="login-link">Hai già un account? <a href="../login/login.html">Accedi</a></p>
     </form>
 
-    <div class="divider">oppure</div>
-
-    <button class="btn-spid" onclick="redirectspid()">Registrati con SPID</button>
-  </div>
-
-  <script src="/signup/signup.js"></script>
+    <script src="/signup/signup.js"></script>
 </body>
 
 </html>
