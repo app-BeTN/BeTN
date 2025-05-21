@@ -20,19 +20,14 @@ function gestisciTipoUtente() {
   const tipo = document.getElementById("tipo").value;
   const campoPiva = document.getElementById("piva");
   const campoNome = document.getElementById("nome");
-  const labelPiva = document.getElementById("labalPiva");
 
   if (tipo === "azienda") {
     document.getElementById("piva").required = true;
     campoPiva.style.display = "block";
-    labelPiva.style.display = "block";
-    labelPiva = "Nome azienda";
     campoNome.placeholder = "Nome azienda";
   } else {
     document.getElementById("piva").required = false;
     campoPiva.style.display = "none";
-    labelPiva.style.display = "none";
-    labelPiva = "Nome utente";
     campoNome.placeholder = "Nome utente";
   }
 }
@@ -97,7 +92,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     s.style.display = 'none';
     s.style.marginTop = '-15px';
     s.style.marginBottom = '5px';
-    s.innerText = 'Email non valida o già esistente';
+    s.innerText = 'Email non valida o già esistente.';
     emailInput.insertAdjacentElement('afterend', s);
     return s;
   })();
@@ -131,7 +126,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
       erroreEmail.style.display = "block";
       emailInput.classList.add("input-error");
     } else if (data.message && data.message.toLowerCase().includes("nome")) {
-      showTooltip("nome", "Nome utente già esistente");
+      showTooltip("nome", "Nome utente già esistente.");
     }
   }
 });
@@ -144,6 +139,20 @@ document.getElementById("email").addEventListener("input", function () {
     const emailInput = document.getElementById("email");
     emailInput.classList.remove("input-error");
   }
+});
+
+document.querySelectorAll('.password-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.classList.add('visible');
+    } else {
+      input.type = 'password';
+      btn.classList.remove('visible');
+    }
+  });
 });
 
 //listener_validazione_live_password
@@ -211,7 +220,7 @@ document.getElementById("nome").addEventListener("input", async function () {
     const data = await res.json();
     if (data.esiste) {
       //errore_utente_esistente
-      tooltip.textContent = "Nome utente già esistente";
+      tooltip.textContent = "Nome utente già esistente.";
       tooltip.style.marginTop = "-15px";
       tooltip.style.marginBottom = "5px";
       tooltip.style.visibility = "visible";
@@ -227,3 +236,4 @@ document.getElementById("nome").addEventListener("input", async function () {
     console.error("Errore controllo nome:", err);
   }
 });
+
