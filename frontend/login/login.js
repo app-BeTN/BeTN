@@ -1,7 +1,4 @@
-// login.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  // ==== eye-toggle per password ====
   document.querySelectorAll('.password-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-target');
@@ -16,12 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const form       = document.getElementById('login-form');
+  const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
-  const passInput  = document.getElementById('password');
-  const formError  = document.getElementById('form-error');
+  const passInput = document.getElementById('password');
+  const formError = document.getElementById('form-error');
 
-  // Rimuove errori al digitare
+  //rimozione dell'errore quando vengono modificati gli input per riprovare il login
   [emailInput, passInput].forEach(input => {
     input.addEventListener('input', () => {
       input.classList.remove('error');
@@ -32,13 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  //button 'Login'
   form.addEventListener('submit', async event => {
     event.preventDefault();
     let valid = true;
     formError.style.display = 'none';
 
-    // Email: required + formato
     const email = emailInput.value.trim();
+    //controllo corretto inserimento della mail
     if (!email) {
       showFieldError(emailInput, 'L\'email è obbligatoria');
       valid = false;
@@ -47,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       valid = false;
     }
 
-    // Password: required + min 6
     const pwd = passInput.value;
+    //controllo corretto inserimento della password
     if (!pwd) {
       showFieldError(passInput, 'La password è obbligatoria');
       valid = false;
@@ -58,10 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!valid) return;
-
-    // Chiamata login
+    //se tutto corretto, effettuata chiama api per il login
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password: pwd })
@@ -79,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  //creazione messaggi di errore
   function showFieldError(input, msg) {
     input.classList.add('error');
     const small = input.parentElement.querySelector('.error-message');
