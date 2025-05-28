@@ -1,6 +1,5 @@
 
 document.getElementById('eventForm').addEventListener('submit', async (e) => {
-
     e.preventDefault();
 
     const nome = document.getElementById("nome").value.trim();
@@ -18,31 +17,31 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     erroreData.classList.add("hidden");
     erroreOra.classList.add("hidden");
 
-    // --- Conversione robusta della data ---
     const [anno, mese, giorno] = data.split("-").map(Number);
-    const inputOnlyDate = new Date(anno, mese - 1, giorno); // solo data
-    const inputDateTime = new Date(`${data}T${ora}`);       // data + ora completa
+    const inputOnlyDate = new Date(anno, mese - 1, giorno);
+    const inputDateTime = new Date(`${data}T${ora}`);
 
     const now = new Date();
     const todayOnlyDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    // 1. Data nel passato
+    //controllo della data se è passata
     if (inputOnlyDate.getTime() < todayOnlyDate.getTime()) {
         erroreData.classList.remove("hidden");
         return;
     }
 
-    // 2. Oggi con orario nel passato
+    //controllo orario passato se il giorno è oggi
     if (inputOnlyDate.getTime() === todayOnlyDate.getTime() && inputDateTime <= now) {
         erroreOra.classList.remove("hidden");
         return;
     }
 
-    //Controllo campi inseriti
+    //Controllo campi di input
     if (!nome || !descrizione || !data || !ora || !luogo || !tipoEvento || !postiDisponibili) {
         return;
     }
 
+    //creazione evento
     const response = await fetch("/api/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,7 +59,7 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     }
 });
 
-//Gestione bottone annulla
+//annulla creazione dell'evento
 document.getElementById("annulla-btn").addEventListener("click", () => {
     window.location.href = "./../home/home.html";
 });

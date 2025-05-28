@@ -1,4 +1,3 @@
-// home.js
 document.addEventListener('DOMContentLoaded', async () => {
 
   const container = document.getElementById("eventi-container");
@@ -6,18 +5,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const token = localStorage.getItem("token");
 
+    //stampa degli eventi (solo pubblici se non è stato effettuato il login)
     const res = await fetch("/eventi", {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
 
-
     const eventi = await res.json();
 
+    //se non ci sono eventi attivi sull'applicazione
     if (eventi.length === 0) {
       container.innerHTML = "<p>Nessun evento disponibile.</p>";
       return;
     }
 
+    //creazione card per l'aggiunta di ogni evento alla home
     eventi.forEach(evento => {
       const card = document.createElement("div");
       card.className = "card-evento";
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const containerAuth = document.getElementById('auth-buttons');
 
+  //controllo se l'utente ha effettuato il login
   if (!token) {
     containerAuth.innerHTML = `<button id="login-btn">Login</button>`;
     document.getElementById('login-btn')
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  //ritorno dell'utente che ha effettuato il login
   try {
     const res = await fetch('/api/me', {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -99,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+//dropdown funzionalità dell'utente 
 function initUserDropdown() {
   const dropdown = document.getElementById('dropdown');
   const overlay = document.getElementById('overlay');
@@ -127,17 +131,17 @@ function initUserDropdown() {
     });
 }
 
-//Bottoni
 window.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   const container = document.getElementById("auth-buttons");
 
+  //controllo dell'utente se ha effettuato il login 
   if (!token) {
     container.innerHTML = `<button id="login-btn" class="btn btn-primary" onclick="location.href='./../signup/signup.html'">Login</button>`;
     return;
   }
 
-
+  //ritorno dell'utente che ha effettuato il login 
   const res = await fetch('/api/me', {
     headers: { Authorization: `Bearer ${token}` }
   });

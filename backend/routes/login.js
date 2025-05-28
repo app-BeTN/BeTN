@@ -3,9 +3,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const Utente = require('../models/Utenti');
-const secretKey = 'betn_secret_123';
+require('dotenv').config();
 
-router.post('/api/login', async (req, res) => {
+const secretKey = process.env.JWT_SECRET;
+
+//login utente
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await Utente.findOne({ email });
 

@@ -1,10 +1,12 @@
-// routes/event.js
-
-const express = require("express");
+const express = require('express');
+const Event = require('../models/Eventi');
 const router = express.Router();
-const Event = require("../models/Eventi");
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
+const secretKey = process.env.JWT_SECRET;
+
+//creazione di un nuovo utente
 router.post("/api/events", async (req, res) => {
   try {
     const { nome, descrizione, data, ora, postiDisponibili, luogo, tipoEvento, tipoVisibilita } = req.body;
@@ -37,13 +39,14 @@ router.post("/api/events", async (req, res) => {
   }
 });
 
+//Cerca un evento
 router.get("/event/:id", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   let userId = null;
 
   try {
     if (token) {
-      const decoded = jwt.verify(token, 'betn_secret_123');
+      const decoded = jwt.verify(token, secretKey);
       userId = decoded.id;
     }
 
@@ -62,12 +65,13 @@ router.get("/event/:id", async (req, res) => {
   }
 });
 
+//iscrizione utente ad un evento
 router.post("/event/:id/iscriviti", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Non autorizzato" });
 
   try {
-    const decoded = jwt.verify(token, 'betn_secret_123');
+    const decoded = jwt.verify(token, secretKey);
     const userId = decoded.id;
 
     const evento = await Event.findById(req.params.id);
@@ -92,13 +96,39 @@ router.post("/event/:id/iscriviti", async (req, res) => {
   }
 });
 
+// Modifica evento
+router.put('/event/:id', async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+  try {
+    const event = await Event.findByIdAndUpdate(id, updateData, { new: true });
+    if (!event) return res.status(404).json({ message: 'Evento non trovato' });
+    res.json(event);
+  } catch (err) {
+    res.status(400).json({ message: 'Dati non validi', error: err.message });
+  }
+});
+
+// Elimina evento
+router.delete('/event/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const event = await Event.findByIdAndDelete(id);
+    if (!event) return res.status(404).json({ message: 'Evento non trovato' });
+    res.json({ message: 'Evento eliminato correttamente' });
+  } catch (err) {
+    res.status(500).json({ message: 'Errore server', error: err.message });
+  }
+});
+
+//Ritorna tutti gli eventi
 router.get("/eventi", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   let isAutenticato = false;
   if (token) {
     try {
-      jwt.verify(token, "betn_secret_123");
+      jwt.verify(token, secretKey);
       isAutenticato = true;
     } catch (err) {
       isAutenticato = false;
@@ -116,4 +146,3 @@ router.get("/eventi", async (req, res) => {
 });
 
 module.exports = router;
-
