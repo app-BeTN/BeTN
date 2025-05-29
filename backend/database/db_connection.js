@@ -12,8 +12,7 @@ const uri = `mongodb+srv://${user}:${pass}@${host}/${name}?retryWrites=true&w=ma
 async function connectToMongoDB() {
   try {
     await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+
     });
     console.log('✅ Connesso a MongoDB');
   } catch (err) {
