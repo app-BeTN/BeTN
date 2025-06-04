@@ -36,10 +36,19 @@ body {
   background-color: #0056b3;
 }
 
-#iscriviti-btn[disabled] {
+#iscriviti-btn:disabled {
   background-color: #cccccc;
   color: #666;
   cursor: not-allowed;
+}
+
+/* Se vuoi un’altra classe per “Posti esauriti” */
+.btn-esaurito {
+  background-color: #f44336;   /* rosso per evidenziare “esaurito” */
+  color: #fff;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: none;
 }
 
 #esci-btn {

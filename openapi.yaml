@@ -4,7 +4,7 @@ info:
   description: Documentazione per le API del backend BeTN
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3006
 
 tags:
   - name: Authentication
@@ -184,7 +184,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/eventi:
+
     get:
       tags:
         - Events
@@ -207,7 +207,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/event/{id}:
+  /api/events/{id}:
     get:
       tags:
         - Events

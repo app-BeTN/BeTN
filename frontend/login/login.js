@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // 1) Toggle per mostrare/nascondere la password
   document.querySelectorAll('.password-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-target');
@@ -13,40 +14,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // 2) Prendo i riferimenti agli elementi del DOM
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
   const passInput = document.getElementById('password');
   const formError = document.getElementById('form-error');
 
-  //rimozione dell'errore quando vengono modificati gli input per riprovare il login
+  // 3) Rimuovo l’errore quando l’utente modifica gli input
   [emailInput, passInput].forEach(input => {
     input.addEventListener('input', () => {
       input.classList.remove('error');
       const small = input.parentElement.querySelector('.error-message');
-      small.textContent = '';
-      small.style.display = 'none';
+      if (small) {
+        small.textContent = '';
+        small.style.display = 'none';
+      }
       formError.style.display = 'none';
+      formError.textContent = '';
     });
   });
 
-  //button 'Login'
+  // 4) Gestione del submit del form di login
   form.addEventListener('submit', async event => {
     event.preventDefault();
     let valid = true;
     formError.style.display = 'none';
+    formError.textContent = '';
 
+    // Validazione email
     const email = emailInput.value.trim();
-    //controllo corretto inserimento della mail
     if (!email) {
-      showFieldError(emailInput, 'L\'email è obbligatoria');
+      showFieldError(emailInput, "L'email è obbligatoria");
       valid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       showFieldError(emailInput, 'Formato email non valido');
       valid = false;
     }
 
+    // Validazione password
     const pwd = passInput.value;
-    //controllo corretto inserimento della password
     if (!pwd) {
       showFieldError(passInput, 'La password è obbligatoria');
       valid = false;
@@ -56,34 +62,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!valid) return;
-    //se tutto corretto, effettuata chiama api per il login
+
+    // 5) Chiamata all’API di login
     try {
-      const res = await fetch('/login', {
+      const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password: pwd })
       });
       const result = await res.json();
+      console.log("LOGIN response JSON:", result, "res.ok =", res.ok);
 
-      if (result.success) {
+      if (res.ok) {
+        // Login riuscito: salvo il token e faccio redirect
         localStorage.setItem('token', result.token);
         window.location.href = '../home/home.html';
       } else {
-        showFormError(result.message);
+        // Login fallito: mostro il messaggio restituito dal server
+        showFormError(result.message || 'Credenziali non valide');
       }
     } catch (err) {
+      console.error("Errore fetch/login:", err);
       showFormError('Si è verificato un errore di rete. Riprova.');
     }
   });
 
-  //creazione messaggi di errore
+  // 6) Show error sotto singolo input
   function showFieldError(input, msg) {
     input.classList.add('error');
     const small = input.parentElement.querySelector('.error-message');
+    if (!small) return;
     small.textContent = msg;
     small.style.display = 'block';
   }
 
+  // 7) Show errore generico in cima al form
   function showFormError(msg) {
     formError.textContent = msg;
     formError.style.display = 'block';

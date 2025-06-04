@@ -120,7 +120,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
   //controllo_ricezione_corretta_token
   if (res.ok) {
     localStorage.setItem('token', data.token);
-    window.location.href = '/home/home.html';
+    window.location.href = '/login/login.html';
   } else if (res.status === 409) {
     if (data.message && data.message.toLowerCase().includes("email")) {
       erroreEmail.style.display = "block";

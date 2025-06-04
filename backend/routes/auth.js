@@ -1,94 +1,58 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const router = express.Router();
+const { registerController } = require('../controllers/authController');
 const validateEmail = require('../middleware/validateEmail');
 const validatePassword = require('../middleware/validatePassword');
 const Utente = require('../models/Utenti');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const secretKey = process.env.JWT_SECRET;
+const router = express.Router();
 
-//creazione nuovo utente
-router.post('/api/signup', async (req, res) => {
-  const { nome, email, password, tipo, azienda } = req.body;
+// POST /api/signup
+//   - Esegue validazione email e password (middleware)
+//   - Chiama registerController
+router.post('/api/signup', validateEmail, validatePassword, registerController);
 
-  const esistente = await Utente.findOne({ $or: [{ nome }, { email }] });
-  if (esistente) {
-    return res.status(409).json({ message: 'Nome utente o email già registrati' });
+/**
+ * GET /api/check-nome?nome=FOO
+ *   - Restituisce { available: false } se esiste già un Utente con nome=FOO
+ *   - Altrimenti { available: true }
+ */
+router.get('/api/check-nome', async (req, res) => {
+  const { nome } = req.query;
+  if (!nome) {
+    return res.status(400).json({ message: 'Nome è obbligatorio' });
   }
-
-  try {
-    const hashed = await bcrypt.hash(password, 10);
-    const nuovoUtente = new Utente({
-      nome,
-      email,
-      password: hashed,
-      tipo,
-      azienda: azienda || null
-    });
-
-    await nuovoUtente.save();
-
-    const token = jwt.sign({ id: nuovoUtente._id }, secretKey, { expiresIn: '1h' });
-
-    res.status(201).json({ token });
-  } catch (error) {
-    console.error('Errore signup:', error);
-    res.status(500).json({ message: 'Errore durante la registrazione' });
+  const existing = await Utente.findOne({ nome });
+  if (existing) {
+    return res.json({ available: false });
   }
+  return res.json({ available: true });
 });
 
-//Cerca utente loggato
+/**
+ * GET /api/me
+ *   - Se c’è header Authorization valido, restituisce i dati dell’utente (senza password)
+ *   - Altrimenti 401
+ */
 router.get('/api/me', async (req, res) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader) {
     return res.status(401).json({ message: 'Token mancante' });
   }
-
   const token = authHeader.split(' ')[1];
-  try {
-    const payload = jwt.verify(token, secretKey);
-    const utente = await Utente.findById(payload.id);
-    if (!utente) return res.status(404).json({ message: 'Utente non trovato' });
-
-    res.json({ nome: utente.nome });
-  } catch (err) {
-    res.status(401).json({ message: 'Token non valido' });
+  if (!token) {
+    return res.status(401).json({ message: 'Token mancante' });
   }
-});
-
-//Controlla esistenza utente dato il nome
-router.get('/api/check-nome', async (req, res) => {
-  const nome = req.query.nome;
-  if (!nome) return res.status(400).json({ esiste: false });
-
-  const utente = await Utente.findOne({ nome });
-  return res.json({ esiste: !!utente });
-});
-
-// Modifica utente
-router.put('/user/:id', async (req, res) => {
-  const { id } = req.params;
-  const updateData = req.body;
   try {
-    const user = await User.findByIdAndUpdate(id, updateData, { new: true });
-    if (!user) return res.status(404).json({ message: 'Utente non trovato' });
-    res.json(user);
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await Utente.findById(payload.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'Utente non trovato' });
+    }
+    return res.json(user);
   } catch (err) {
-    res.status(400).json({ message: 'Dati non validi', error: err.message });
-  }
-});
-
-// Elimina utente
-router.delete('/user/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) return res.status(404).json({ message: 'Utente non trovato' });
-    res.json({ message: 'Utente eliminato correttamente' });
-  } catch (err) {
-    res.status(500).json({ message: 'Errore server', error: err.message });
+    return res.status(401).json({ message: 'Token non valido' });
   }
 });
 

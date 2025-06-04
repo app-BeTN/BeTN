@@ -41,10 +41,15 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
         return;
     }
 
+    const token = localStorage.getItem('token');
+
     //creazione evento
     const response = await fetch("/api/events", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": 
+            "application/json",
+            'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ nome, descrizione, data, ora, luogo, tipoEvento, postiDisponibili, tipoVisibilita })
     });
 

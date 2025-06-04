@@ -1,43 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
-
-  const container = document.getElementById("eventi-container");
-
-  try {
-    const token = localStorage.getItem("token");
-
-    //stampa degli eventi (solo pubblici se non è stato effettuato il login)
-    const res = await fetch("/eventi", {
-      headers: token ? { Authorization: `Bearer ${token}` } : {}
-    });
-
-    const eventi = await res.json();
-
-    //se non ci sono eventi attivi sull'applicazione
-    if (eventi.length === 0) {
-      container.innerHTML = "<p>Nessun evento disponibile.</p>";
-      return;
-    }
-
-    //creazione card per l'aggiunta di ogni evento alla home
-    eventi.forEach(evento => {
-      const card = document.createElement("div");
-      card.className = "card-evento";
-      card.innerHTML = `
-        <h3>${evento.nome}</h3>
-        <p><strong>Data:</strong> ${new Date(evento.data).toLocaleDateString("it-IT")}</p>
-        <p><strong>Luogo:</strong> ${evento.luogo}</p>
-        <span class="badge ${evento.tipoVisibilita}">${evento.tipoVisibilita}</span>
-      `;
-      card.addEventListener("click", () => {
-        window.location.href = `./../evento/evento.html?id=${evento._id}`;
-      });
-
-      container.appendChild(card);
-    });
-  } catch (err) {
-    container.innerHTML = "<p>Errore nel caricamento degli eventi.</p>";
-    console.error(err);
-  }
+document.addEventListener("DOMContentLoaded", async() => {
 
   const token = localStorage.getItem('token');
   const containerAuth = document.getElementById('auth-buttons');
@@ -100,6 +61,188 @@ document.addEventListener('DOMContentLoaded', async () => {
     localStorage.removeItem('token');
     location.reload();
   }
+  
+  const cardsContainer = document.getElementById("cards-container");
+  const listaEventiSection = document.getElementById("lista-eventi");
+  const eventiContainer = document.getElementById("eventi-container");
+  const titoloEventi = document.getElementById("titolo-eventi");
+  const btnBack = document.getElementById("back-to-cards");
+
+  // Mostra subito le card, nascondendo la lista-eventi
+  showCardsView();
+
+  // 1) Event listener per ogni card
+  document
+    .getElementById("card-tutti-eventi")
+    .addEventListener("click", () => showEvents("tutti"));
+
+  document
+    .getElementById("card-eventi-musicali")
+    .addEventListener("click", () => showEvents("musica"));
+
+  document
+    .getElementById("card-eventi-culturali")
+    .addEventListener("click", () => showEvents("cultura"));
+
+  document
+    .getElementById("card-eventi-sportivi")
+    .addEventListener("click", () => showEvents("sport"));
+
+  document
+    .getElementById("card-altri-eventi")
+    .addEventListener("click", () => showEvents("altro"));
+
+  document
+    .getElementById("card-miei-eventi")
+    .addEventListener("click", () => showEvents("miei"));
+
+  document
+    .getElementById("card-eventi-iscritti")
+    .addEventListener("click", () => showEvents("iscritti"));
+
+  // 2) Bottone “Torna alle categorie”
+  btnBack.addEventListener("click", showCardsView);
+
+  // ——————————————————————————————————————————
+  // FUNZIONI AUSILIARIE
+  // ——————————————————————————————————————————
+
+  function showCardsView() {
+    cardsContainer.style.display = "grid";
+    listaEventiSection.style.display = "none";
+  }
+
+  function showEventsView() {
+    cardsContainer.style.display = "none";
+    listaEventiSection.style.display = "block";
+  }
+
+  async function getCurrentUser() {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    try {
+      const res = await fetch("/api/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Errore fetch /api/me:", err);
+      return null;
+    }
+  }
+
+  async function fetchAllEvents() {
+    const token = localStorage.getItem("token");
+    const headers = token
+      ? { Authorization: `Bearer ${token}` }
+      : {};
+
+    try {
+      const res = await fetch("/api/events", { headers });
+      if (!res.ok) {
+        console.error("Errore fetch /eventi:", res.status);
+        return [];
+      }
+      const eventi = await res.json();
+      return eventi;
+    } catch (err) {
+      console.error("Errore di rete fetch /eventi:", err);
+      return [];
+    }
+  }
+
+  function renderEventi(eventiArray) {
+    eventiContainer.innerHTML = "";
+    if (eventiArray.length === 0) {
+      eventiContainer.innerHTML = "<p>Nessun evento trovato.</p>";
+      return;
+    }
+
+    eventiArray.forEach((e) => {
+      const cardDiv = document.createElement("div");
+      cardDiv.classList.add("evento-card");
+      cardDiv.innerHTML = `
+        <h3>${e.nome}</h3>
+        <p><strong>Data:</strong> ${new Date(e.data).toLocaleDateString("it-IT")}</p>
+        <p><strong>Luogo:</strong> ${e.luogo}</p>
+        <span class="badge ${e.tipoVisibilita}">${e.tipoVisibilita}</span>
+      `;
+      cardDiv.addEventListener("click", () => {
+        window.location.href = `./../evento/evento.html?id=${e._id}`;
+      });
+
+      eventiContainer.appendChild(cardDiv);
+    });
+  }
+
+  async function showEvents(filterType) {
+    const eventi = await fetchAllEvents();
+
+    let user = null;
+    if (filterType === "miei" || filterType === "iscritti") {
+      user = await getCurrentUser();
+    }
+
+    let filtrati = eventi;
+    switch (filterType) {
+      case "musica":
+      case "cultura":
+      case "sport":
+      case "altro": {
+        const mapTipo = {
+          musica: "Musica",
+          cultura: "Cultura",
+          sport: "Sport",
+          altro: "Altro",
+        };
+        const tipoSelezionato = mapTipo[filterType];
+        filtrati = eventi.filter((e) => e.tipo === tipoSelezionato);
+        titoloEventi.innerText = `Eventi ${tipoSelezionato}`;
+        break;
+      }
+
+      case "miei": {
+        if (!user) {
+          filtrati = [];
+        } else {
+          // Adatta “creatoreId” al campo esatto fornito dalla tua API
+          filtrati = eventi.filter((e) => e.creatoreId === user.id);
+        }
+        titoloEventi.innerText = "I miei eventi";
+        break;
+      }
+
+      case "iscritti": {
+        if (!user) {
+          filtrati = [];
+        } else {
+          // Adatta “partecipanti” al campo della tua API
+          filtrati = eventi.filter(
+            (e) =>
+              Array.isArray(e.partecipanti) &&
+              e.partecipanti.includes(user.id)
+          );
+        }
+        titoloEventi.innerText = "Eventi a cui sono iscritto";
+        break;
+      }
+
+      case "tutti":
+      default: {
+        filtrati = eventi;
+        titoloEventi.innerText = "Tutti gli eventi";
+        break;
+      }
+    }
+
+    showEventsView();
+    renderEventi(filtrati);
+  }
 });
 
 //dropdown funzionalità dell'utente 
@@ -130,30 +273,3 @@ function initUserDropdown() {
       location.href = 'home.html';
     });
 }
-
-window.addEventListener('DOMContentLoaded', async () => {
-  const token = localStorage.getItem('token');
-  const container = document.getElementById("auth-buttons");
-
-  //controllo dell'utente se ha effettuato il login 
-  if (!token) {
-    container.innerHTML = `<button id="login-btn" class="btn btn-primary" onclick="location.href='./../signup/signup.html'">Login</button>`;
-    return;
-  }
-
-  //ritorno dell'utente che ha effettuato il login 
-  const res = await fetch('/api/me', {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    container.innerHTML = `
-      <button id="creaEvento-btn" class="btnCreaEvento" onclick="location.href='./../creaEvento/creaEvento.html'">Crea Evento</button>
-      <span id="nome-utente" class="nome-utente">${data.nome}</span>
-      <button id="logout-btn" class="btn btn-secondary" onclick="logout()">Logout</button>
-    `;
-  } else {
-    container.innerHTML = `<button id="login-btn" class="btn btn-primary" onclick="location.href='./../signup/signup.html'">Login</button>`;
-  }
-});
