@@ -23,9 +23,9 @@ router.get('/api/check-nome', async (req, res) => {
   }
   const existing = await Utente.findOne({ nome });
   if (existing) {
-    return res.json({ available: false });
+    return res.json({ esiste: false });
   }
-  return res.json({ available: true });
+  return res.json({ esiste: true });
 });
 
 //GET /api/me
