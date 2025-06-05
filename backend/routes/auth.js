@@ -1,5 +1,6 @@
 const express = require('express');
-const { registerController } = require('../controllers/authController');
+const { signupController } = require('../controllers/authController');
+const { loginController } = require('../controllers/authController');
 const validateEmail = require('../middleware/validateEmail');
 const validatePassword = require('../middleware/validatePassword');
 const Utente = require('../models/Utenti');
@@ -9,15 +10,12 @@ require('dotenv').config();
 const router = express.Router();
 
 // POST /api/signup
-//   - Esegue validazione email e password (middleware)
-//   - Chiama registerController
-router.post('/api/signup', validateEmail, validatePassword, registerController);
+router.post('/api/signup', validateEmail, validatePassword, signupController);
 
-/**
- * GET /api/check-nome?nome=FOO
- *   - Restituisce { available: false } se esiste già un Utente con nome=FOO
- *   - Altrimenti { available: true }
- */
+// POST /api/login
+router.post('/api/login', loginController);
+
+//GET /api/check-nome
 router.get('/api/check-nome', async (req, res) => {
   const { nome } = req.query;
   if (!nome) {
@@ -30,11 +28,7 @@ router.get('/api/check-nome', async (req, res) => {
   return res.json({ available: true });
 });
 
-/**
- * GET /api/me
- *   - Se c’è header Authorization valido, restituisce i dati dell’utente (senza password)
- *   - Altrimenti 401
- */
+//GET /api/me
 router.get('/api/me', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {

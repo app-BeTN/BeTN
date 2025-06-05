@@ -1,4 +1,3 @@
-// backend/routes/event.js
 const express = require('express');
 const {
   createEventController,
@@ -11,20 +10,19 @@ const { authRequired } = require('../middleware/auth');
 
 const router = express.Router();
 
-// ▷ ▷ ▷ Nuova Route per iscriversi a un evento
 // POST /api/event/:id/iscriviti
 router.post('/api/event/:id/iscriviti', authRequired, iscrivitiController);
 
-// ▷ ▷ ▷ Route esistenti
-// POST /api/events        → createEventController
-// GET  /api/events        → listEventsController
-// GET  /api/events/:id    → getEventController
+// POST /api/events 
 router.post('/api/events', createEventController);
+
+// GET  /api/events
 router.get('/api/events', listEventsController);
+
+// GET  /api/events/:id
 router.get('/api/events/:id', getEventController);
 
-// Alias (se li stai usando nel frontend)
-// ex. GET /event/:id → getEventController
+// GET /event/:id
 router.get('/event/:id', getEventController);
 
 module.exports = router;

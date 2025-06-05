@@ -68,10 +68,10 @@ document.addEventListener("DOMContentLoaded", async() => {
   const titoloEventi = document.getElementById("titolo-eventi");
   const btnBack = document.getElementById("back-to-cards");
 
-  // Mostra subito le card, nascondendo la lista-eventi
+  // mostro subito le card categorie
   showCardsView();
 
-  // 1) Event listener per ogni card
+  // listener per ogni card categoria
   document
     .getElementById("card-tutti-eventi")
     .addEventListener("click", () => showEvents("tutti"));
@@ -100,23 +100,22 @@ document.addEventListener("DOMContentLoaded", async() => {
     .getElementById("card-eventi-iscritti")
     .addEventListener("click", () => showEvents("iscritti"));
 
-  // 2) Bottone “Torna alle categorie”
+  // btn “Torna alle categorie”
   btnBack.addEventListener("click", showCardsView);
 
-  // ——————————————————————————————————————————
-  // FUNZIONI AUSILIARIE
-  // ——————————————————————————————————————————
-
+  // visualizzazione card categorie
   function showCardsView() {
     cardsContainer.style.display = "grid";
     listaEventiSection.style.display = "none";
   }
 
+  //visualizzazione card eventi
   function showEventsView() {
     cardsContainer.style.display = "none";
     listaEventiSection.style.display = "block";
   }
 
+  // ritorna l'utente che ha fatto il login
   async function getCurrentUser() {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -136,6 +135,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     }
   }
 
+  // ritorna tutti gli eventi pubblici: se effettuato il login anche i privati
   async function fetchAllEvents() {
     const token = localStorage.getItem("token");
     const headers = token
@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     }
   }
 
+  // stampa a video tutti gli eventi
   function renderEventi(eventiArray) {
     eventiContainer.innerHTML = "";
     if (eventiArray.length === 0) {
@@ -180,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     });
   }
 
+  // filtra gli eventi dato il tipo
   async function showEvents(filterType) {
     const eventi = await fetchAllEvents();
 
@@ -210,7 +212,6 @@ document.addEventListener("DOMContentLoaded", async() => {
         if (!user) {
           filtrati = [];
         } else {
-          // Adatta “creatoreId” al campo esatto fornito dalla tua API
           filtrati = eventi.filter((e) => e.creatoreId === user.id);
         }
         titoloEventi.innerText = "I miei eventi";
@@ -221,7 +222,6 @@ document.addEventListener("DOMContentLoaded", async() => {
         if (!user) {
           filtrati = [];
         } else {
-          // Adatta “partecipanti” al campo della tua API
           filtrati = eventi.filter(
             (e) =>
               Array.isArray(e.partecipanti) &&

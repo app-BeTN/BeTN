@@ -1,13 +1,7 @@
 const createError = require('http-errors');
 const Evento = require('../models/Eventi');
 
-/**
- * createEvent:
- *   - dataPayload: { nome, descrizione, data, ora, postiDisponibili, luogo, tipoEvento, tipoVisibilita }
- *   - userId: id dell’utente estratto dal token (anche se per ora non salviamo il creator)
- *   - Se manca un campo obbligatorio → 400
- *   - Restituisce l’evento creato
- */
+// creazione evento
 async function createEvent(dataPayload, userId) {
   if (!userId) {
     throw createError(401, 'Utente non autenticato');
@@ -37,7 +31,6 @@ async function createEvent(dataPayload, userId) {
     luogo,
     tipoEvento,
     tipoVisibilita: tipoVisibilita || 'pubblico',
-    // NOTA: nel modello c’è anche “sponsorizzato”, “postiOccupati”, “iscritti”: rimangono ai default
   });
 
   try {
@@ -48,12 +41,7 @@ async function createEvent(dataPayload, userId) {
   }
 }
 
-/**
- * listEvents:
- *   - Se userId presente → restituisci tutti gli eventi
- *   - Altrimenti → restituisci solo quelli con tipoVisibilita="pubblico"
- *   - Restituisce un array di eventi (solo alcuni campi: nome, data, luogo, tipoVisibilita)
- */
+// restituzione lista eventi
 async function listEvents(userId) {
   let query;
   if (userId) {
@@ -69,13 +57,7 @@ async function listEvents(userId) {
   }
 }
 
-/**
- * getEventById:
- *   - id: string
- *   - Se id mancante → 400
- *   - Se non esiste → 404
- *   - Restituisce l’oggetto evento completo
- */
+// restituzione evento dato l'id
 async function getEventById(id) {
   if (!id) {
     throw createError(400, 'Id evento mancante');
@@ -87,6 +69,7 @@ async function getEventById(id) {
   return event;
 }
 
+// iscrizione evento
 async function iscrivitiEvent(eventId, userId) {
   if (!eventId) {
     throw createError(400, 'ID evento mancante');
@@ -95,24 +78,24 @@ async function iscrivitiEvent(eventId, userId) {
     throw createError(401, 'Utente non autenticato');
   }
 
-  // 1) Trovo l'evento
+  //cerca evento
   const event = await Evento.findById(eventId);
   if (!event) {
     throw createError(404, 'Evento non trovato');
   }
 
-  // 2) Controllo se l'utente è già iscritto
+  // controllo se l'utente è già iscritto
   const already = event.iscritti.find(uid => uid.toString() === userId);
   if (already) {
     throw createError(409, 'Sei già iscritto a questo evento');
   }
 
-  // 3) Controllo posti disponibili
+  // controllo posti disponibili
   if (event.postiOccupati >= event.postiDisponibili) {
     throw createError(409, 'Evento pieno, nessun posto disponibile');
   }
 
-  // 4) Aggiungo l'utente all'array iscritti e incremento postiOccupati
+  // aggiunta dell'utente all'array iscritti e incremento postiOccupati
   event.iscritti.push(userId);
   event.postiOccupati = event.postiOccupati + 1;
 

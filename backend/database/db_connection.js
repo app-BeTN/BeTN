@@ -6,6 +6,7 @@ const pass = encodeURIComponent(process.env.DB_PASS);
 const host = process.env.DB_HOST;
 const name = process.env.DB_NAME;
 
+// stringa di connessione
 const uri = `mongodb+srv://${user}:${pass}@${host}/${name}?retryWrites=true&w=majority`;
 
 //connessione al database

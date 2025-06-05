@@ -4,12 +4,7 @@ require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-/**
- * authRequired:
- *   - Verifica la presenza di “Authorization: Bearer <token>”
- *   - Se valido, assegna `req.user = { id, tipo }`
- *   - Se manca o non valido, risponde 401
- */
+// controllo del token per la verifica che l'utente abbia effettuato l'accesso
 async function authRequired(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
@@ -36,9 +31,8 @@ async function authRequired(req, res, next) {
 }
 
 /**
- * authOptional:
- *   - Se header `Authorization` presente e valido, popula `req.user`
- *   - Altrimenti va avanti senza bloccare.
+ *  se header `Authorization` è presente e valido, popula `req.user`
+ *  altrimenti va avanti senza bloccare
  */
 async function authOptional(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -55,7 +49,7 @@ async function authOptional(req, res, next) {
       req.user = { id: payload.id, tipo: payload.tipo };
     }
   } catch {
-    // token non valido → non blocchiamo, ma non mettiamo req.user
+
   }
   return next();
 }

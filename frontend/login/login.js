@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) Toggle per mostrare/nascondere la password
+  // toggle per mostrare/nascondere la password
   document.querySelectorAll('.password-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-target');
@@ -14,13 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 2) Prendo i riferimenti agli elementi del DOM
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
   const passInput = document.getElementById('password');
   const formError = document.getElementById('form-error');
 
-  // 3) Rimuovo l’errore quando l’utente modifica gli input
+  // rimozione dell’errore quando l’utente modifica gli input
   [emailInput, passInput].forEach(input => {
     input.addEventListener('input', () => {
       input.classList.remove('error');
@@ -34,14 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 4) Gestione del submit del form di login
+  // gestione del submit del form di login
   form.addEventListener('submit', async event => {
     event.preventDefault();
     let valid = true;
     formError.style.display = 'none';
     formError.textContent = '';
 
-    // Validazione email
+    // validazione email
     const email = emailInput.value.trim();
     if (!email) {
       showFieldError(emailInput, "L'email è obbligatoria");
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       valid = false;
     }
 
-    // Validazione password
+    // validazione password
     const pwd = passInput.value;
     if (!pwd) {
       showFieldError(passInput, 'La password è obbligatoria');
@@ -63,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!valid) return;
 
-    // 5) Chiamata all’API di login
+    // POST /api/login
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -74,11 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("LOGIN response JSON:", result, "res.ok =", res.ok);
 
       if (res.ok) {
-        // Login riuscito: salvo il token e faccio redirect
+        // login effettuato
         localStorage.setItem('token', result.token);
         window.location.href = '../home/home.html';
       } else {
-        // Login fallito: mostro il messaggio restituito dal server
+        // login fallito
         showFormError(result.message || 'Credenziali non valide');
       }
     } catch (err) {
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6) Show error sotto singolo input
+  // errore sotto il campo di input errato
   function showFieldError(input, msg) {
     input.classList.add('error');
     const small = input.parentElement.querySelector('.error-message');
@@ -96,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     small.style.display = 'block';
   }
 
-  // 7) Show errore generico in cima al form
+  // errore generico in cima al form
   function showFormError(msg) {
     formError.textContent = msg;
     formError.style.display = 'block';

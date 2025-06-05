@@ -1,7 +1,8 @@
 const createError = require('http-errors');
 const authService = require('../services/authService');
 
-async function registerController(req, res, next) {
+//signup controller
+async function signupController(req, res, next) {
   try {
     const nuovo = await authService.registerUser(req.body);
     return res.status(201).json(nuovo);
@@ -13,6 +14,7 @@ async function registerController(req, res, next) {
   }
 }
 
+// login controller
 async function loginController(req, res, next) {
   try {
     const result = await authService.loginUser(req.body);
@@ -26,6 +28,6 @@ async function loginController(req, res, next) {
 }
 
 module.exports = {
-  registerController,
+  signupController,
   loginController
 };

@@ -1,4 +1,4 @@
-//tooltip_messaggi_di_errore
+// tooltip messaggi di errore
 function showTooltip(inputId, message) {
   const input = document.getElementById(inputId);
 
@@ -15,7 +15,7 @@ function showTooltip(inputId, message) {
   input.classList.add("input-error");
 }
 
-//gestione_nome_utente/nome_azienda_con_creazione_input_piva
+// gestione nome utente/nome azienda con creazione input piva
 function gestisciTipoUtente() {
   const tipo = document.getElementById("tipo").value;
   const campoPiva = document.getElementById("piva");
@@ -32,7 +32,7 @@ function gestisciTipoUtente() {
   }
 }
 
-//listener_signUp_btn_onclick
+// listener signUp btn onclick
 document.getElementById('signup-btn').addEventListener('click', async (e) => {
   e.preventDefault();
 
@@ -43,7 +43,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     return;
   }
 
-  //prende_in_input_i_valori_dal_form
+  // prende in input i valori dal form
   const nome = document.getElementById("nome").value.trim();
   const email = document.getElementById("email").value.trim();
   const piva = document.getElementById("piva").value.trim();
@@ -52,39 +52,39 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
   const tipo = document.getElementById("tipo").value;
   const azienda = tipo === "azienda" ? nome : null;
 
-  //check_dei_campi_in_input
+  // check dei campi in input
   if (!nome || !email || !password || !confermaPassword || !tipo) {
     return;
   }
 
-  //controllo_corrispondenza_password
+  // controllo corrispondenza password
   const errorePassword = document.getElementById("errore-password");
   const passwordInput = document.getElementById("password");
   const confermaInput = document.getElementById("conferma-password");
 
   if (password !== confermaPassword) {
-    //errore_corrispondenza_password
+    // errore corrispondenza password
     errorePassword.style.display = "block";
     passwordInput.classList.add("input-error");
     confermaInput.classList.add("input-error");
     return;
   } else {
-    //password_corrette
+    // password corrette
     errorePassword.style.display = "none";
     passwordInput.classList.remove("input-error");
     confermaInput.classList.remove("input-error");
   }
 
-  //controllo_piva_se_azienda
+  // controllo piva se azienda
   if (tipo === "azienda" && (!piva || piva.length < 11)) {
     return;
   }
 
-  //controllo_inserimento_email
+  // controllo inserimento email
   const emailInput = document.getElementById("email");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  //errore_email_esistente
+  // errore email esistente
   const erroreEmail = document.getElementById("errore-email") || (() => {
     const s = document.createElement('small');
     s.id = 'errore-email';
@@ -97,7 +97,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     return s;
   })();
 
-  //errore_formato_email
+  // errore formato email
   if (!emailRegex.test(email)) {
     erroreEmail.style.display = "block";
     emailInput.classList.add("input-error");
@@ -107,17 +107,17 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     emailInput.classList.remove("input-error");
   }
 
-  //invio_dati_al_backend
+  //invio dati al backend
   const res = await fetch('/api/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nome, email, password, tipo, azienda })
   });
 
-  //dati_ricevuti_dal_backend
+  // dati ricevuti dal backend
   const data = await res.json();
 
-  //controllo_ricezione_corretta_token
+  // controllo ricezione corretta token
   if (res.ok) {
     localStorage.setItem('token', data.token);
     window.location.href = '/login/login.html';
@@ -131,7 +131,7 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
   }
 });
 
-//listener_annullamento_messaggio_errore_email
+// listener annullamento messaggio errore email
 document.getElementById("email").addEventListener("input", function () {
   if (document.getElementById("errore-email")) {
     const erroreEmail = document.getElementById("errore-email");
@@ -155,11 +155,11 @@ document.querySelectorAll('.password-toggle').forEach(btn => {
   });
 });
 
-//listener_validazione_live_password
+// listener validazione live password
 document.getElementById("password").addEventListener("input", function () {
   const password = this.value;
 
-  //controllo_formato_password
+  // controllo formato password
   let error = document.getElementById("errore-password2");
   if (!error) {
     error = document.createElement("small");
@@ -171,30 +171,30 @@ document.getElementById("password").addEventListener("input", function () {
     this.insertAdjacentElement("afterend", error);
   }
 
-  //regole_formato_password
+  // regole formato password
   const regole = document.getElementById("regole-password");
   const lengthOK = password.length >= 6;
   const upperOK = /[A-Z]/.test(password);
   const digitOK = /[0-9]/.test(password);
   const symbolOK = /[!@#$%^&*]/.test(password);
   if (!lengthOK || !upperOK || !digitOK || !symbolOK) {
-    //formato_password_errato
+    // formato password errato
     error.style.display = "block";
     this.classList.add("input-error");
     if (regole) regole.style.color = "red";
   } else {
-    //formato_password_corretto
+    // formato password corretto
     error.style.display = "none";
     this.classList.remove("input-error");
     if (regole) regole.style.color = "#2ecc71";
   }
 });
 
-//listener_validazione_live_nome_utente
+// listener validazione live nome utente
 document.getElementById("nome").addEventListener("input", async function () {
   const nome = this.value.trim();
   
-  //messaggio_di_errore
+  // messaggio di errore
   const tooltip = document.getElementById("errore-nome") || (() => {
     const t = document.createElement("small");
     t.id = "errore-nome";
@@ -204,7 +204,7 @@ document.getElementById("nome").addEventListener("input", async function () {
     return t;
   })();
 
-  //rimuove_errore_se_nome_vuoto
+  // rimuove errore se nome vuoto
   if (!nome) {
     tooltip.style.visibility = "hidden";
     tooltip.style.opacity = "0";
@@ -212,14 +212,14 @@ document.getElementById("nome").addEventListener("input", async function () {
     return;
   }
 
-  //controllo_nome_utente_nel_database
+  // controllo nome utente nel database
   try {
     const res = await fetch(`/api/check-nome?nome=${encodeURIComponent(nome)}`, {
       cache: "no-store"
     });
     const data = await res.json();
     if (data.esiste) {
-      //errore_utente_esistente
+      // errore utente esistente
       tooltip.textContent = "Nome utente già esistente.";
       tooltip.style.marginTop = "-15px";
       tooltip.style.marginBottom = "5px";
@@ -227,7 +227,7 @@ document.getElementById("nome").addEventListener("input", async function () {
       tooltip.style.opacity = "1";
       this.classList.add("input-error");
     } else {
-      //utente_corretto
+      // utente corretto
       tooltip.style.visibility = "hidden";
       tooltip.style.opacity = "0";
       this.classList.remove("input-error");

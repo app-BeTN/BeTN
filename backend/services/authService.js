@@ -7,29 +7,22 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '2h'; // fallback
 
-/**
- * registerUser:
- *   - data: { nome, email, password, tipo, azienda }
- *   - Verifica campi obbligatori
- *   - Controlla che email o nome non esista già
- *   - Fa hash della password e salva
- *   - Restituisce { id, nome, email, tipo, azienda }
- */
-async function registerUser(data) {
+// signup utente
+async function signup(data) {
   const { nome, email, password, tipo, azienda } = data;
-  // Controllo base sui campi
+  // controllo base sui campi
   if (!nome || !email || !password || !tipo) {
     throw createError(400, 'Nome, email, password e tipo sono obbligatori');
   }
-  // Controllo esistenza utente
+  // controllo esistenza utente
   const existing = await Utente.findOne({ $or: [{ email }, { nome }] });
   if (existing) {
     throw createError(409, 'Utente già esistente');
   }
-  // Hash della password
+  // hash della password
   const salt = await bcrypt.genSalt(10);
   const hashed = await bcrypt.hash(password, salt);
-  // Creazione e salvataggio
+  // creazione utente e salvataggio
   const user = new Utente({ nome, email, password: hashed, tipo, azienda });
   const saved = await user.save();
   return {
@@ -41,14 +34,7 @@ async function registerUser(data) {
   };
 }
 
-/**
- * loginUser:
- *   - data: { email, password }
- *   - Se manca email/password → 400
- *   - Se utente non trovato o pw errata → 401
- *   - Altrimenti genera un JWT con payload { id, tipo }
- *   - Restituisce { token, user: { id, nome, email, tipo, azienda } }
- */
+// login utente
 async function loginUser(data) {
   const { email, password } = data;
   if (!email || !password) {
@@ -77,6 +63,6 @@ async function loginUser(data) {
 }
 
 module.exports = {
-  registerUser,
+  signup,
   loginUser
 };
