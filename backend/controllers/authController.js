@@ -4,7 +4,7 @@ const authService = require('../services/authService');
 //signup controller
 async function signupController(req, res, next) {
   try {
-    const nuovo = await authService.registerUser(req.body);
+    const nuovo = await authService.signup(req.body);
     return res.status(201).json(nuovo);
   } catch (err) {
     if (createError.isHttpError(err)) {
