@@ -1,3 +1,4 @@
+// controllo requisiti minimi della password
 module.exports = function validatePassword(req, res, next) {
   const { password } = req.body;
 

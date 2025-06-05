@@ -1,33 +1,68 @@
-/* home.css */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* =================================================================
+   VARIABILI COLORI E RESET
+   ================================================================= */
 :root {
-  --primary: #007AFF;
-  --background: #F9FAFB;
-  --card-bg: #FFFFFF;
-  --text-main: #1C1C1E;
-  --text-muted: #6e6e73;
-  --border: #E5E5EA;
-  --font: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
-}
-html,
-body {
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f4f6f8;
+  --color-light: #f0efeb;
+  --color-body: #ffffff;
+  --color-text: #333333;
+
+  /* Colori per i tipi di evento: Musica, Cultura, Sport, Altro */
+  --color-musica: #4a90e2;   /* blu */
+  --color-cultura: #27ae60;  /* verde */
+  --color-sport: #e67e22;    /* arancio */
+  --color-altro: #7f8c8d;    /* grigio */
+
+  --coloro-top-header: hsla(181, 100%, 20%, 0.8);
+  --color-btn: linear-gradient(135deg,#EF8A3A,#ef8b3a96);
+  --color-primary: #264653;
+  --color-secondary: #E9C46A;
+  --color-neutral: #2A9D8F;
+  --color-accent1: #E76F51;
+  --color-accent2: #F4A261;
+  --color-light: #F0EFEB;
+  --color-body: #ffffff;
+  --color-text: #333333;
 }
 
+/* Global reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--color-body);
+  color: var(--color-text);
+}
+
+/* ================================================================
+   HEADER E FOOTER (rimangono come prima)
+   ================================================================= */
+/* Header */
 .top-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.5rem;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border-bottom: 1px solid #E5E5EA;
+  background-color: var(--color-primary);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 10;
+}
+.top-header .header-left {
+  display: flex;
+  align-items: center;
+}
+.top-header .logo {
+  height: 50px;
+}
+.top-header .title {
+  color: var(--color-secondary);
+  margin-left: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 #auth-buttons {
@@ -61,23 +96,6 @@ body {
   pointer-events: auto;
 }
 
-.event-card {
-  background: var(--card-bg);
-  margin-bottom: 1.5rem;
-  width: 100%;
-  max-width: 600px;
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #ddd;
-  position: relative;
-}
-
-.event-card h3 {
-  margin-top: 0;
-}
-
 .event-meta {
   font-size: 0.9rem;
   color: var(--text-muted);
@@ -89,11 +107,12 @@ body {
 #creaEvento-btn {
   height: 40px;
   padding: 0 14px;
-  background: linear-gradient(135deg,#0066cc,#3399ff);
+  background: var(--color-btn);
   color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 14px;
+  font-weight: bold;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -119,7 +138,7 @@ body {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(135deg,#0066cc,#3399ff);
+  background: var(--color-btn);
   padding: 0 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -218,41 +237,184 @@ body {
   fill: #003e99;
 }
 
-.eventi-grid {
+/* =================================================================
+   SECTION CARDS (Effetto “Tetris”)
+   ================================================================= */
+#cards-container {
+  display: grid;
+  /* Facciamo 4 colonne uguali */
+  grid-template-columns: repeat(4, 1fr);
+  /* Ogni riga standard avrà altezza 150px (ma le card possono fare span sopra) */
+  grid-auto-rows: 150px;
+  gap: 10px;
+  padding: 20px;
+  margin-bottom: 80px; /* spazio per il footer */
+}
+
+/* Regola base per tutte le card */
+.card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 10px;
-}
-
-.card-evento {
-  background-color: #f3f3f3;
-  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
   border-radius: 8px;
-  width: 240px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.15s ease-in-out;
 }
 
-.card-evento:hover {
+.card:hover {
   transform: scale(1.03);
 }
 
-.card-evento h3 {
-  margin: 0 0 8px;
+/* =========================================================
+   Dimensioni “a blocchi” per effetto tetris
+   ========================================================= */
+/* La card “grande” occuperà 2 colonne (wide) e 1 riga (alta 150px) */
+.card-grande {
+  grid-column: span 2;
+  grid-row: span 1;
 }
 
-.card-evento p {
-  margin: 4px 0;
+/* La card “media” occuperà 1 colonna e 2 righe (300px di altezza) */
+.card-media {
+  grid-column: span 1;
+  grid-row: span 2;
 }
 
-.event-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
+/* La card “piccola” occuperà 1 colonna e 1 riga (150px di altezza) */
+.card-piccola {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* La card “enorme” occuperà 2 colonne e 2 righe (300x300px) */
+.card-enorme {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* ================================================================
+   COLORAZIONE SECONDO TIPO DI EVENTO (solo per le card in home)
+   ================================================================= */
+.card-miei {
+  background-color: #34495e; /* grigio scuro per “I miei eventi” */
+}
+
+.card-iscritti {
+  background-color: #8e44ad; /* viola per “Eventi a cui sono iscritto” */
+}
+
+.card-tutti {
+  background-color: #2c3e50; /* blu scuro per “Tutti gli eventi” */
+}
+
+/* Tipologie: musica, cultura, sport, altro */
+.card-musica {
+  background-color: var(--color-musica);
+}
+
+.card-cultura {
+  background-color: var(--color-cultura);
+}
+
+.card-sport {
+  background-color: var(--color-sport);
+}
+
+.card-altro {
+  background-color: var(--color-altro);
+}
+
+/* Titolo e posizione interna */
+.card h3 {
+  margin: 0;
+  padding: 0 10px;
+}
+
+/* =========================================================
+   SECTION “LISTA EVENTI” (grafica per la visualizzazione degli eventi)
+   ========================================================= */
+#lista-eventi {
+  padding: 20px;
+  margin-bottom: 80px;
+}
+
+/* Bottone “Torna alle categorie” */
+.btn-indietro {
+  background: none;
+  border: none;
+  color: #2c3e50;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+.btn-indietro:hover {
+  text-decoration: underline;
+}
+
+/* Contenitore degli eventi (griglia) */
+.eventi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+  padding: 0 2rem 2rem;
+}
+
+/* Card singolo evento */
+.evento-card {
+  position: relative;
+  background: rgba(240,239,235,0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(240,239,235,0.6);
+  border-left: 6px solid #d0cfc7a7;
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.evento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.evento-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+.evento-card p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Assicurati che il footer non copra i contenuti */
+@media (max-height: 700px) {
+  body {
+    margin-bottom: 100px;
+  }
+}
+
+.card-evento .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.card-evento .badge.publico {
+  background-color: var(--color-accent2);
+  color: #fff;
+}
+.card-evento .badge.privato {
+  background-color: var(--color-neutral);
+  color: #fff;
 }
 
 .badge {
@@ -268,6 +430,7 @@ body {
   color: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: transform 0.2s;
+  margin: 10px;
 }
 
 .badge.pubblico {
@@ -280,4 +443,228 @@ body {
 
 .event-card:hover .badge {
   transform: scale(1.05);
+}
+
+/* ==================================================================
+   ******* NUOVE REGOLE PER HOME “A BLOCCHI” *******
+   ================================================================== */
+
+/* ================================
+   1) CONTENITORE DELLE CARD
+   ================================ */
+#cards-container {
+  display: grid;
+  /* Quattro colonne uguali */
+  grid-template-columns: repeat(4, 1fr);
+  /* Ogni riga “standard” è alta 150px, ma le card possono fare span */
+  grid-auto-rows: 150px;
+  gap: 12px;
+  padding: 20px;
+  margin-top: 1rem;
+  margin-bottom: 2rem; /* Spazio rispetto alla sezione lista-eventi o footer */
+}
+
+/* Regola base per tutte le card di categoria */
+.card-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-home:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ================================
+   2) DIMENSIONI “A TETRIS” PER CARD
+   ================================ */
+/* 2 colonne x 1 riga (150px) */
+.card-grande {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* 1 colonna x 2 righe (300px) */
+.card-media {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+/* 1 colonna x 1 riga (150px) */
+.card-piccola {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* 2 colonne x 2 righe (300px x 300px) */
+.card-enorme {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* ================================
+   3) COLORI SPECIFICI PER CATEGORIA
+   ================================ */
+/* “I miei eventi” */
+.card-miei {
+  background: var(--color-primary); /* #264653 */
+}
+
+/* “Eventi a cui sono iscritto” */
+.card-iscritti {
+  background: var(--color-neutral); /* #2A9D8F */
+}
+
+/* “Tutti gli eventi” */
+.card-tutti {
+  background: var(--color-secondary); /* #E9C46A */
+}
+
+/* “Eventi musicali” */
+.card-musica {
+  background: var(--color-accent1); /* #E76F51 */
+}
+
+/* “Eventi culturali” */
+.card-cultura {
+  background: var(--color-accent2); /* #F4A261 */
+}
+
+/* “Eventi sportivi” */
+.card-sport {
+  background: linear-gradient(135deg, #1e3d59 0%, #1e3d59 100%); 
+  /* Puoi usare anche un colore custom: ad es. un blu più scuro o un arancio. */
+  /* In mancanza di variabile specifica, ho scelto un gradiente scuro. */
+}
+
+/* “Altri eventi” */
+.card-altro {
+  background: var(--coloro-top-header); /* hsla(181,100%,20%,0.8) */
+}
+
+/* Titolo all’interno della card */
+.card-home h3 {
+  margin: 0;
+  padding: 0 10px;
+  line-height: 1.2;
+}
+
+/* ================================
+   4) SEZIONE “LISTA EVENTI” (già presente)
+   ================================ */
+/* Nasconde o mostra dinamicamente tramite JS (non serve cambiare queste) */
+#lista-eventi {
+  padding: 20px;
+}
+
+/* Bottone “Torna alle categorie” */
+.btn-indietro {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+.btn-indietro:hover {
+  text-decoration: underline;
+}
+
+/* Griglia per i singoli eventi */
+.eventi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 1rem;
+}
+
+/* Card di ogni singolo evento */
+.evento-card {
+  background-color: var(--color-light);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.evento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.evento-card h3 {
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.evento-card p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.card-evento .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.card-evento .badge.publico {
+  background-color: var(--color-accent2);
+  color: #fff;
+}
+.card-evento .badge.privato {
+  background-color: var(--color-neutral);
+  color: #fff;
+}
+
+.badge {
+  position: relative;
+  top: 1rem;
+  right: 1rem;
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+  margin: 10px;
+}
+
+.badge.pubblico {
+  background: linear-gradient(135deg, #8dcd8f 0%, #abe8ae 100%);
+}
+
+.badge.privato {
+  background: linear-gradient(135deg, #e3827c 0%, #e4a5a4 100%);
+}
+
+.event-card:hover .badge {
+  transform: scale(1.05);
+}
+
+/* Assicurati che il footer non copra i contenuti in altezza */
+@media (max-height: 700px) {
+  body {
+    margin-bottom: 100px;
+  }
 }

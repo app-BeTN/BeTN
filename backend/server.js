@@ -6,36 +6,42 @@ const swaggerUi = require('swagger-ui-express');
 const connectToMongoDB = require('./database/db_connection');
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/event');
-const loginRoutes = require('./routes/login');
+
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// conessione db
 connectToMongoDB();
+
+// collegamento api
+app.use(authRoutes);     // /api/signup, /api/check-nome, /api/me
+app.use(eventRoutes);    // /api/events, /event/:id
+
+// collegamento al frontend 
 app.use('/creaEvento', express.static(path.join(__dirname, './../frontend/creaEvento')));
 app.use('/evento', express.static(path.join(__dirname, './../frontend/evento')));
 app.use('/signup', express.static(path.join(__dirname, './../frontend/signup')));
 app.use('/home', express.static(path.join(__dirname, './../frontend/home')));
 app.use('/style', express.static(path.join(__dirname, './../frontend/style')));
 app.use('/login', express.static(path.join(__dirname, './../frontend/login')));
-app.use(authRoutes);
-app.use(eventRoutes);
-app.use(loginRoutes);
+app.use('/assets', express.static(path.join(__dirname, './../frontend/assets')));
 
-const port = process.env.PORT;
-const host = process.env.HOST;
-
+// endpoint root
 app.get('/', (req, res) => {
   res.redirect('/home/home.html');
 });
-app.listen(port, () => {
-  console.log(`🚀 Webapp: http://${host}:${port}`);
-});
 
+// swagger
+const port = process.env.PORT || 3000;
+const host = process.env.HOST;
 const swaggerDoc = YAML.load(path.join(__dirname, '../openapi.yaml'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
+// server
 app.listen(port, () => {
+  console.log(`🚀 Webapp: http://${host}:${port}`);
   console.log(`🔘 Swagger: http://${host}:${port}/api-docs`);
 });

@@ -2,33 +2,79 @@
 <html lang="it">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>BeTN - Home</title>
-  <link rel="stylesheet" href="./../style/home.css">
+  <link rel="stylesheet" href="./../style/home.css" />
 </head>
 
 <body>
+  <!-- ========== HEADER ========== -->
   <header class="top-header">
-    <h1>Eventi BeTN</h1>
+    <div class="header-left">
+      <img src="/assets/img/logo.png" alt="Logo BeTN" class="logo" />
+      <h1 class="title">BeTN</h1>
+    </div>
     <div id="auth-buttons"></div>
     <div id="overlay"></div>
   </header>
 
-  <main class="main-content" id="event-list">
+  <!-- ====================================================
+       1) SEZIONE “CATEGORIE” – Vista iniziale con 7 card
+       ==================================================== -->
+  <section id="cards-container">
+    <!-- I miei eventi -->
+    <div class="card-home card-grande card-miei" id="card-miei-eventi">
+      <h3>I miei eventi</h3>
+    </div>
 
-  </main>
+    <!-- Eventi a cui sono iscritto -->
+    <div class="card-home card-grande card-iscritti" id="card-eventi-iscritti">
+      <h3>Eventi a cui sono iscritto</h3>
+    </div>
 
-  <section id="lista-eventi">
-    <h2>Eventi disponibili</h2>
-    <div id="eventi-container" class="eventi-grid"></div>
+    <!-- Tutti gli eventi -->
+    <div class="card-home card-enorme card-tutti" id="card-tutti-eventi">
+      <h3>Tutti gli eventi</h3>
+    </div>
+
+    <!-- Eventi musicali -->
+    <div class="card-home card-piccola card-musica" id="card-eventi-musicali">
+      <h3>Eventi musicali</h3>
+    </div>
+
+    <!-- Eventi culturali -->
+    <div class="card-home card-media card-cultura" id="card-eventi-culturali">
+      <h3>Eventi culturali</h3>
+    </div>
+
+    <!-- Eventi sportivi -->
+    <div class="card-home card-media card-sport" id="card-eventi-sportivi">
+      <h3>Eventi sportivi</h3>
+    </div>
+
+    <!-- Altri eventi -->
+    <div class="card-home card-piccola card-altro" id="card-altri-eventi">
+      <h3>Altri eventi</h3>
+    </div>
   </section>
 
 
+  <!-- ====================================================
+       2) SEZIONE “LISTA EVENTI” – Inizialmente nascosta
+       ==================================================== -->
+  <section id="lista-eventi" style="display: none;">
+    <button id="back-to-cards" class="btn-indietro">← Torna alle categorie</button>
+    <h2 id="titolo-eventi">Eventi</h2>
+    <div id="eventi-container" class="eventi-grid"></div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
   <footer class="footer">
     <p>BeTN © 2025</p>
   </footer>
 
+  <!-- ========== SCRIPT PRINCIPALE ========== -->
   <script src="./../home/home.js"></script>
 </body>
 
