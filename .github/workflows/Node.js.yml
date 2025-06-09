@@ -2,16 +2,14 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    # Qui dichiari l’environment (facoltativo)...
     environment: production
-
-    # …e le variabili d’ambiente lette dai tuoi Secrets
+    
     env:
       PORT: ${{ secrets.PORT }}
       DB_USER: ${{ secrets.DB_USER }}
@@ -39,7 +37,7 @@ jobs:
     name: Deploy su Render
     runs-on: ubuntu-latest
     needs: test
-    # Se anche il deploy deve vedere gli stessi env…
+    
     environment: production
     env:
       RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }}
