@@ -10,19 +10,25 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '2h'; // fallback
 // signup utente
 async function signup(data) {
   const { nome, email, password, tipo, azienda } = data;
-  // controllo base sui campi
   if (!nome || !email || !password || !tipo) {
     throw createError(400, 'Nome, email, password e tipo sono obbligatori');
   }
-  // controllo esistenza utente
-  const existing = await Utente.findOne({ $or: [{ email }, { nome }] });
-  if (existing) {
-    throw createError(409, 'Utente già esistente');
+
+  // controllo se esiste già utente con stessa email
+  const byEmail = await Utente.findOne({ email });
+  if (byEmail) {
+    throw createError(409, 'Email già in uso');
   }
-  // hash della password
+
+  // controllo se esiste già utente con stesso nome
+  const byNome = await Utente.findOne({ nome });
+  if (byNome) {
+    throw createError(409, 'Nome utente già in uso');
+  }
+
+  // se tutto corretto si crea l'utente
   const salt = await bcrypt.genSalt(10);
   const hashed = await bcrypt.hash(password, salt);
-  // creazione utente e salvataggio
   const user = new Utente({ nome, email, password: hashed, tipo, azienda });
   const saved = await user.save();
   return {

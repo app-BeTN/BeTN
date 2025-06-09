@@ -80,11 +80,10 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     return;
   }
 
-  // controllo inserimento email
+  // errore inserimento email
   const emailInput = document.getElementById("email");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // errore email esistente
   const erroreEmail = document.getElementById("errore-email") || (() => {
     const s = document.createElement('small');
     s.id = 'errore-email';
@@ -94,6 +93,21 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     s.style.marginBottom = '5px';
     s.innerText = 'Email non valida o già esistente.';
     emailInput.insertAdjacentElement('afterend', s);
+    return s;
+  })();
+
+  // errore inserimento nome 
+  const nomeInput = document.getElementById("nome");
+
+  const erroreNome = document.getElementById("errore-nome") || (() => {
+    const s = document.createElement('small');
+    s.id = 'errore-nome';
+    s.style.color = 'red';
+    s.style.display = 'none';
+    s.style.marginTop = '-15px';
+    s.style.marginBottom = '5px';
+    s.innerText = 'Nome utente già esistente.';
+    nomeInput.insertAdjacentElement('afterend', s);
     return s;
   })();
 
@@ -107,27 +121,41 @@ document.getElementById('signup-btn').addEventListener('click', async (e) => {
     emailInput.classList.remove("input-error");
   }
 
-  //invio dati al backend
-  const res = await fetch('/api/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome, email, password, tipo, azienda })
-  });
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email, password, tipo, azienda })
+    });
+    const data = await res.json();
 
-  // dati ricevuti dal backend
-  const data = await res.json();
-
-  // controllo ricezione corretta token
-  if (res.ok) {
-    localStorage.setItem('token', data.token);
-    window.location.href = '/login/login.html';
-  } else if (res.status === 409) {
-    if (data.message && data.message.toLowerCase().includes("email")) {
-      erroreEmail.style.display = "block";
-      emailInput.classList.add("input-error");
-    } else if (data.message && data.message.toLowerCase().includes("nome")) {
-      showTooltip("nome", "Nome utente già esistente.");
+    if (res.ok) {
+      // Registrazione avvenuta: salvo token e vado alla pagina di login
+      localStorage.setItem('token', data.token);
+      window.location.href = '/login/login.html';
+    } else if (res.status === 409) {
+      if (data.message && data.message.toLowerCase().includes('email')) {
+        // errore email
+        erroreEmail.textContent = 'Questa email è già in uso';
+        erroreEmail.style.display = 'block';
+        emailInput.classList.add('input-error');
+      } else if (data.message && data.message.toLowerCase().includes('nome')) {
+        // errore nome
+        erroreNome.textContent = 'Nome utente già esistente.';
+        erroreNome.style.display = 'block';
+        nomeInput.classList.add('input-error');
+      }  else {
+        // errore generico
+        alert('Errore: ' + (data.message || 'Impossibile registrarsi al momento.'));
+      }
+    
+    } else {
+      // Qualche altro errore HTTP (400, 500 ecc.)
+      alert('Errore imprevisto: ' + (data.message || 'Riprova più tardi.'));
     }
+  } catch (err) {
+    console.error('Errore di rete durante registrazione:', err);
+    alert('Si è verificato un problema di rete. Riprova più tardi.');
   }
 });
 
@@ -193,7 +221,7 @@ document.getElementById("password").addEventListener("input", function () {
 // listener validazione live nome utente
 document.getElementById("nome").addEventListener("input", async function () {
   const nome = this.value.trim();
-  
+
   // messaggio di errore
   const tooltip = document.getElementById("errore-nome") || (() => {
     const t = document.createElement("small");
@@ -219,6 +247,11 @@ document.getElementById("nome").addEventListener("input", async function () {
     });
     const data = await res.json();
     if (data.esiste) {
+      // utente corretto
+      tooltip.style.visibility = "hidden";
+      tooltip.style.opacity = "0";
+      this.classList.remove("input-error");
+    } else {
       // errore utente esistente
       tooltip.textContent = "Nome utente già esistente.";
       tooltip.style.marginTop = "-15px";
@@ -226,11 +259,6 @@ document.getElementById("nome").addEventListener("input", async function () {
       tooltip.style.visibility = "visible";
       tooltip.style.opacity = "1";
       this.classList.add("input-error");
-    } else {
-      // utente corretto
-      tooltip.style.visibility = "hidden";
-      tooltip.style.opacity = "0";
-      this.classList.remove("input-error");
     }
   } catch (err) {
     console.error("Errore controllo nome:", err);
