@@ -1,0 +1,115 @@
+/* frontend/profile/profile.css */
+
+/* 1) Reset & base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 2) Contenitore centrale identico a login/signup */
+.profile-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 0 1rem;
+}
+
+/* 3) Card con ombra */
+.profile-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* 4) Titolo */
+.profile-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #111;
+}
+
+/* 5) “← Indietro” */
+.back-button {
+  background: none;
+  border: none;
+  color: #1877f2;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+.back-button:hover {
+  text-decoration: underline;
+}
+
+/* 6) Form */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* 7) Label e input come nel login */
+.profile-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+}
+.profile-input,
+.profile-select {
+  margin-top: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccd0d5;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.profile-input:focus,
+.profile-select:focus {
+  outline: none;
+  border-color: #1877f2;
+  background-color: #fff;
+}
+
+/* 8) Pulsante “Salva Modifiche” in gradient come login */
+.profile-button {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(90deg, #4a90e2, #1877f2);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.profile-button:hover {
+  opacity: 0.9;
+}
+
+/* 9) Nascondi di default il container P.IVA */
+.hidden {
+  display: none;
+}
+
+/* 10) Responsive */
+@media (max-width: 480px) {
+  .profile-container {
+    margin: 2rem auto;
+  }
+  .profile-card {
+    padding: 1.5rem;
+  }
+}

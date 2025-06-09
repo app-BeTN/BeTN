@@ -27,7 +27,26 @@ async function loginController(req, res, next) {
   }
 }
 
+
+// ──────────────────────────────────────────
+// UPDATE UTENTE (PUT /api/me)
+async function updateController(req, res, next) {
+  try {
+    const userId = req.user.id;              // viene messo da authRequired
+    const aggiornato = await authService.updateUser(userId, req.body);
+    return res.json(aggiornato);
+  } catch (err) {
+    if (createError.isHttpError(err)) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
 module.exports = {
   signupController,
-  loginController
+  loginController,
+  updateController,    // ← esportalo
 };
+
+

@@ -28,6 +28,7 @@ app.use('/home', express.static(path.join(__dirname, './../frontend/home')));
 app.use('/style', express.static(path.join(__dirname, './../frontend/style')));
 app.use('/login', express.static(path.join(__dirname, './../frontend/login')));
 app.use('/assets', express.static(path.join(__dirname, './../frontend/assets')));
+app.use('/profile',express.static(path.join(__dirname, '../frontend/profile')));
 
 // endpoint root
 app.get('/', (req, res) => {
