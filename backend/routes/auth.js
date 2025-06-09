@@ -9,6 +9,10 @@ require('dotenv').config();
 
 const router = express.Router();
 
+const { authRequired }      = require('../middleware/auth');
+const { updateController }  = require('../controllers/authController');
+
+
 // POST /api/signup
 router.post('/api/signup', validateEmail, validatePassword, signupController);
 
@@ -50,4 +54,20 @@ router.get('/api/me', async (req, res) => {
   }
 });
 
+// PUT /api/me → aggiorna i dati dell'utente loggato
+// layers: authRequired → validazione parti modificate → controller
+router.put(
+  '/api/me',
+  authRequired,
+  // se modifichi email o password riusa i tuoi middleware:
+  (req, res, next) => { 
+    if (req.body.email)    validateEmail(req, res, next);
+    else                    next();
+  },
+  (req, res, next) => {
+    if (req.body.password) validatePassword(req, res, next);
+    else                   next();
+  },
+  updateController
+);
 module.exports = router;

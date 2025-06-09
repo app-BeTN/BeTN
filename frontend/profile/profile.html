@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>BeTN – Modifica Profilo</title>
+  <!-- Solo il CSS di questa pagina -->
+  <link rel="stylesheet" href="../style/profile.css" />
+</head>
+<body>
+  <div class="profile-container">
+    <button type="button" class="back-button" onclick="history.back()">
+      ← Indietro
+    </button>
+    <div class="profile-card">
+      <h2 class="profile-title">Modifica Profilo</h2>
+      <form id="profile-form" class="profile-form">
+        <label class="profile-label">
+          Nome
+          <input type="text" id="nome" name="nome" required class="profile-input" />
+        </label>
+        <label class="profile-label">
+          Email
+          <input type="email" id="email" name="email" required class="profile-input" />
+        </label>
+        <div id="piva-container" class="hidden">
+          <label class="profile-label">
+            Partita IVA
+            <input type="text" id="piva" name="piva" class="profile-input" />
+          </label>
+        </div>
+        <label class="profile-label">
+          Nuova Password
+          <input type="password" id="password" name="password" class="profile-input" />
+        </label>
+        <button type="submit" class="profile-button">Salva Modifiche</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="./profile.js"></script>
+</body>
+</html>

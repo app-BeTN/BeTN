@@ -61,8 +61,30 @@ async function loginUser(data) {
     }
   };
 }
+// ──────────────────────────────────────────
+// updateUser: modifica i campi consentiti, hash sulla password se presente
+async function updateUser(userId, data) {
+  const update = {};
+  if (data.nome)     update.nome     = data.nome;
+  if (data.email)    update.email    = data.email;
+  if (data.tipo)     update.tipo     = data.tipo;
+  if (data.azienda)  update.azienda  = data.azienda;
+  if (data.password) {
+    const salt     = await bcrypt.genSalt(10);
+    update.password = await bcrypt.hash(data.password, salt);
+  }
+
+  const user = await Utente.findByIdAndUpdate(userId, update, {
+    new: true,                 // ritorna il documento aggiornato
+    runValidators: true        // rispetta gli enum / required
+  }).select('-password');
+  if (!user) throw createError(404, 'Utente non trovato');
+  return user;
+}
 
 module.exports = {
   signup,
-  loginUser
+  loginUser,
+  updateUser,    // ← esportalo
 };
+
