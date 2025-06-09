@@ -1,0 +1,22 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]        # o 'master' se usi ancora quel branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]  # puoi aggiungere altre versioni, es. [14.x, 16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'         # cache delle dipendenze per velocizzare
+      - run: npm ci            # installa le dipendenze in ambiente CI
+      - run: npm run build --if-present
+      - run: npm test
