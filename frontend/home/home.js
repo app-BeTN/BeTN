@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       const userName = data.nome;
 
+    containerAuth.innerHTML = `
+      <button id="statistics-btn" style="display:none;">Statistiche</button>
       containerAuth.innerHTML = `
       <button id="creaEvento-btn">Crea Evento</button>
       <div id="dropdown">
@@ -53,6 +55,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       </div>
     `;
+    initUserDropdown();
+    // mostra il pulsante solo per utenti “comune”
+    if (data.tipo === 'comune') {
+      const statsBtn = document.getElementById('statistics-btn');
+      statsBtn.style.display = 'inline-block';
+      statsBtn.addEventListener('click', () =>
+        location.href = './../statistiche/statistics.html'
+      );
+    }
+  } catch (err) {
+    console.error(err);
+    localStorage.removeItem('token');
+    location.reload();
       initUserDropdown();
     } catch (err) {
       console.error(err);

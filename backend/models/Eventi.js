@@ -18,6 +18,8 @@ const eventoSchema = new mongoose.Schema({
   postiOccupati: { type: Number, default: 0 },
   tipoVisibilita: { type: String, enum: ["pubblico", "privato"], default: "pubblico" },
   iscritti: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Evento', eventoSchema, 'eventi');

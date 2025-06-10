@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>BeTn – Statistiche</title>
+
+  <!-- stili globali Home plus nostro CSS -->
+  <link rel="stylesheet" href="../style/home.css" />
+  <link rel="stylesheet" href="../style/statistics.css" />
+
+  <!-- Chart.js per il grafico -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <main class="stats-page">
+    <h1 class="stats-title">Statistiche Eventi</h1>
+
+    <div class="cards-grid">
+      <!-- CARD 1: Trend iscrizioni -->
+      <div class="stat-card card-dark">
+        <h2>Iscrizioni (ultimi 30 giorni)</h2>
+        <canvas id="overTimeChart"></canvas>
+      </div>
+
+      <!-- CARD 2: Top 5 eventi -->
+      <div class="stat-card card-gold">
+        <h2>Top 5 Eventi</h2>
+        <ul id="topEventsList" class="stat-list"></ul>
+      </div>
+
+      <!-- CARD 3: Fill rate -->
+      <div class="stat-card card-teal">
+        <h2>Fill Rate Eventi</h2>
+        <ul id="fillRatesList" class="stat-list"></ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="statistics.js"></script>
+</body>
+</html>
