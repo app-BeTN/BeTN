@@ -1,52 +1,67 @@
-name: Node.js CI
+name: CI & Deploy BeTN
 
+# Partiamo sia su push (main/develop) sia con "Run workflow"
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - develop
+  workflow_dispatch: {}
+
+# Tutti i comandi npm girano in backend/
+defaults:
+  run:
+    working-directory: backend
+
+# Inietto qui in alto tutte le env var del backend
+env:
+  DB_HOST:    ${{ secrets.DB_HOST }}
+  DB_NAME:    ${{ secrets.DB_NAME }}
+  DB_USER:    ${{ secrets.DB_USER }}
+  DB_PASS:    ${{ secrets.DB_PASS }}
+  HOST:       ${{ secrets.HOST }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  PORT:       ${{ secrets.PORT }}
 
 jobs:
   test:
+    name: Test & Build
     runs-on: ubuntu-latest
-
-    # Qui dichiari l’environment (facoltativo)...
-    environment: production
-
-    # …e le variabili d’ambiente lette dai tuoi Secrets
-    env:
-      DB_URL: ${{ secrets.DB_URL }}
-      API_KEY: ${{ secrets.API_KEY }}
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+          node-version: 14.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (if-needed)
+        run: npm run build --if-present
+
+      - name: Run tests
+        run: npm test
 
   deploy:
-    name: Deploy su Render
-    runs-on: ubuntu-latest
+    name: Deploy to Render
     needs: test
-    # Se anche il deploy deve vedere gli stessi env…
-    environment: production
-    env:
-      RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }}
-      SERVICE_ID:   ${{ secrets.RENDER_SERVICE_ID }}
+    runs-on: ubuntu-latest
+    # se vuoi puoi specificare qui environment: production
+
     steps:
-      - name: Attendi deploy su Render
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Trigger deploy on Render
         uses: bounceapp/render-action@0.6.0
         with:
-          render-token: ${{ secrets.RENDER_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          render-token: ${{ secrets.RENDER_TOKEN }}
           service-id:   ${{ secrets.RENDER_SERVICE_ID }}
           retries: 20
-          wait: 16000
-          sleep: 30000
+          wait:    16000
+          sleep:   30000
