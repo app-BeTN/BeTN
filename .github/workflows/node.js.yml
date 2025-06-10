@@ -57,11 +57,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Trigger deploy on Render
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
         uses: bounceapp/render-action@0.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          render-token: ${{ secrets.RENDER_TOKEN }}
-          service-id:   ${{ secrets.RENDER_SERVICE_ID }}
+          render-token:  ${{ secrets.RENDER_TOKEN }}
+          service-id:    ${{ secrets.RENDER_SERVICE_ID }}
           retries: 20
           wait:    16000
           sleep:   30000
