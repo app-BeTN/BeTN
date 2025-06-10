@@ -6,11 +6,24 @@ const validatePassword = require('../middleware/validatePassword');
 const Utente = require('../models/Utenti');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
-const router = express.Router();
-
 const { authRequired }      = require('../middleware/auth');
 const { updateController }  = require('../controllers/authController');
+const { query, validationResult } = require('express-validator');
+const rateLimit = require('express-rate-limit');
+const { checkEmail } = require('../controllers/authController');
+const { checkTipo } = require('../controllers/authController');
+const router = express.Router();
+
+
+
+
+
+// rate limiter: max 10 richieste al minuto per IP
+const emailLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  message: { error: 'Too many requests, please try again later.' }
+});
 
 
 // POST /api/signup
@@ -19,20 +32,34 @@ router.post('/api/signup', validateEmail, validatePassword, signupController);
 // POST /api/login
 router.post('/api/login', loginController);
 
-//GET /api/check-nome
+
+// GET /api/check-nome (case-insensitive)
 router.get('/api/check-nome', async (req, res) => {
   const { nome } = req.query;
   if (!nome) {
     return res.status(400).json({ message: 'Nome è obbligatorio' });
   }
-  const existing = await Utente.findOne({ nome });
+
+  // escape eventuali metacaratteri e crea regex case-insensitive
+  const escaped = nome.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex   = new RegExp(`^${escaped}$`, 'i');
+
+  // cerca nel DB senza badare al maiuscolo/minuscolo
+  const existing = await Utente.findOne({ nome: regex });
+
+  // existing = trovato → nome non disponibile
   if (existing) {
     return res.json({ esiste: false });
   }
+  // non trovato → nome disponibile
   return res.json({ esiste: true });
 });
 
-//GET /api/me
+//get /api/check-email
+router.get('/api/check-email', authRequired, checkEmail);
+
+router.get('/api/check-tipo', authRequired, checkTipo);
+//get /api/me
 router.get('/api/me', async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -54,12 +81,8 @@ router.get('/api/me', async (req, res) => {
   }
 });
 
-// PUT /api/me → aggiorna i dati dell'utente loggato
-// layers: authRequired → validazione parti modificate → controller
-router.put(
-  '/api/me',
-  authRequired,
-  // se modifichi email o password riusa i tuoi middleware:
+//router.put aggiorna l'utente
+router.put('/api/me',authRequired,
   (req, res, next) => { 
     if (req.body.email)    validateEmail(req, res, next);
     else                    next();
