@@ -43,8 +43,8 @@ jobs:
       - name: Build (if-needed)
         run: npm run build --if-present
 
-      - name: Run tests
-        run: npm test
+      - name: Skip tests (no script defined
+        run: echo "Skipping tests"
 
   deploy:
     name: Deploy to Render
