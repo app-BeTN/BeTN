@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async() => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   const token = localStorage.getItem('token');
   const containerAuth = document.getElementById('auth-buttons');
@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     const userName = data.nome;
 
     containerAuth.innerHTML = `
+      <button id="statistics-btn" style="display:none;">Statistiche</button>
       <button id="creaEvento-btn">Crea Evento</button>
       <div id="dropdown">
         <div id="dropdown-header">
@@ -56,6 +57,15 @@ document.addEventListener("DOMContentLoaded", async() => {
       </div>
     `;
     initUserDropdown();
+    // mostra il pulsante solo per utenti “comune”
+    if (data.tipo === 'comune') {
+      const statsBtn = document.getElementById('statistics-btn');
+      statsBtn.style.display = 'inline-block';
+      statsBtn.addEventListener('click', () =>
+        location.href = './../statistiche/statistics.html'
+      );
+    }
+
   } catch (err) {
     console.error(err);
     localStorage.removeItem('token');

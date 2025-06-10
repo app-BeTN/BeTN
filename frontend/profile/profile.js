@@ -93,6 +93,20 @@ document.querySelectorAll('.edit-btn').forEach(btn => {
   });
 });
 
+document.querySelectorAll('.password-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.classList.add('visible');
+    } else {
+      input.type = 'password';
+      btn.classList.remove('visible');
+    }
+  });
+});
+
 // all'interno di document.addEventListener('DOMContentLoaded', ...)
 document.getElementById('profile-form').addEventListener('submit', async (e) => {
   e.preventDefault();

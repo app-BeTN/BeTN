@@ -206,3 +206,29 @@ body {
 .field {
     position: relative;
 }
+
+.password-toggle {
+  position: absolute;
+  top: 55%;
+  right: 100px;              
+  transform: translateY(-55%);
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: #555;
+  transition: fill 0.2s;
+}
+
+.password-toggle:hover svg {
+  fill: #333;
+}
