@@ -10,44 +10,51 @@ on:
 defaults:
   run:
     working-directory: backend
-
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    environment: production
+    
+    env:
+      PORT: ${{ secrets.PORT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      HOST: ${{ secrets.HOST }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
-
-      - name: Smoke test working-directory
-        run: |
-          echo "Current dir: $(pwd)"
-          ls -la
-
-      - name: Dummy test
-        run: |
-          echo "Everything OK"
-          exit 0
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
 
   deploy:
-    needs: test
+    name: Deploy su Render
     runs-on: ubuntu-latest
+    needs: test
+    
     environment: production
     env:
       RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }}
       SERVICE_ID:   ${{ secrets.RENDER_SERVICE_ID }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Trigger deploy su Render
-        if: github.event_name == 'push'
+      - name: Attendi deploy su Render
         uses: bounceapp/render-action@0.6.0
         with:
-          render-token: ${{ env.RENDER_TOKEN }}
-          service-id:   ${{ env.SERVICE_ID }}
+          render-token: ${{ secrets.RENDER_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          service-id:   ${{ secrets.RENDER_SERVICE_ID }}
           retries: 20
-          wait:    16000
-          sleep:   30000
+          wait: 16000
+          sleep: 30000
