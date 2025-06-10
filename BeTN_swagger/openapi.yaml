@@ -1,0 +1,515 @@
+openapi: 3.1.0
+info:
+  title: BeTN API
+  description: Documentazione per le API del backend BeTN
+  version: 1.0.0
+servers:
+  - url: http://localhost:3006
+
+tags:
+  - name: Authentication
+    description: Endpoint per registrazione e login
+  - name: Users
+    description: Endpoint per gestione utenti
+  - name: Events
+    description: Endpoint per gestione eventi
+
+paths:
+  /api/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Registrazione di un nuovo utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignup'
+      responses:
+        '201':
+          description: Utente registrato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          description: Nome utente o email già esistenti
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Errore del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/login:
+    post:
+      tags:
+        - Authentication
+      summary: Autenticazione utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login eseguito con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /api/check-nome:
+    get:
+      tags:
+        - Users
+      summary: Verifica se un nome utente esiste
+      parameters:
+        - name: nome
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Nome utente da verificare
+      responses:
+        '200':
+          description: Esito verifica nome
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckNomeResponse'
+        '400':
+          description: Parametro mancante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/user/{id}:
+    put:
+      tags:
+        - Users
+      summary: Modifica un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID dell'utente da modificare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignup'
+      responses:
+        '200':
+          description: Utente aggiornato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: Dati non validi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Utente non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Users
+      summary: Elimina un utente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID dell'utente da eliminare
+      responses:
+        '200':
+          description: Utente eliminato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Utente non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/events:
+    post:
+      tags:
+        - Events
+      summary: Creazione di un nuovo evento
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+      responses:
+        '201':
+          description: Evento creato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCreateResponse'
+        '400':
+          description: Dati mancanti o non validi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Errore server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/eventi:
+    get:
+      tags:
+        - Events
+      summary: Ottieni lista di eventi
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Elenco eventi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventSummary'
+        '500':
+          description: Errore server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/event/{id}:
+    get:
+      tags:
+        - Events
+      summary: Ottieni dettaglio evento
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID evento
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Dettaglio evento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDetail'
+        '404':
+          description: Evento non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Errore server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Events
+      summary: Modifica un evento
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID evento da modificare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+      responses:
+        '200':
+          description: Evento aggiornato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDetail'
+        '400':
+          description: Dati non validi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Evento non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Events
+      summary: Elimina un evento
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID evento da eliminare
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Evento eliminato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '404':
+          description: Evento non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/event/{id}/iscriviti:
+    post:
+      tags:
+        - Events
+      summary: Iscrizione a un evento
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID evento
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Iscrizione riuscita
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Utente già iscritto o posti esauriti
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Token non valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Evento non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserSignup:
+      type: object
+      required:
+        - nome
+        - email
+        - password
+        - tipo
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        tipo:
+          type: string
+          enum:
+            - privato
+            - azienda
+            - comune
+            - admin
+        azienda:
+          type: string
+          nullable: true
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+          nullable: true
+        message:
+          type: string
+
+    CheckNomeResponse:
+      type: object
+      properties:
+        esiste:
+          type: boolean
+
+    UserInfo:
+      type: object
+      properties:
+        nome:
+          type: string
+
+    EventCreate:
+      type: object
+      required:
+        - nome
+        - descrizione
+        - data
+        - ora
+        - postiDisponibili
+        - luogo
+        - tipoEvento
+      properties:
+        nome:
+          type: string
+        descrizione:
+          type: string
+        data:
+          type: string
+          format: date
+        ora:
+          type: string
+        postiDisponibili:
+          type: integer
+        luogo:
+          type: string
+        tipoEvento:
+          type: string
+        tipoVisibilita:
+          type: string
+          enum:
+            - pubblico
+            - privato
+
+    EventCreateResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        eventId:
+          type: string
+
+    EventSummary:
+      type: object
+      properties:
+        nome:
+          type: string
+        data:
+          type: string
+          format: date
+        luogo:
+          type: string
+        tipoVisibilita:
+          type: string
+          enum:
+            - pubblico
+            - privato
+
+    EventDetail:
+      allOf:
+        - $ref: '#/components/schemas/EventSummary'
+        - type: object
+          properties:
+            descrizione:
+              type: string
+            ora:
+              type: string
+            postiDisponibili:
+              type: integer
+            sponsorizzato:
+              type: boolean
+            postiOccupati:
+              type: integer
+            iscritti:
+              type: array
+              items:
+                type: string
+            giàIscritto:
+              type: boolean
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string

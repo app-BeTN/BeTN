@@ -1,0 +1,84 @@
+name: Tag & Release with Changelog and Email Notification
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Fail if push not from PR or trusted user
+        run: |
+          echo "Pusher: ${{ github.actor }}"
+          TRUSTED_USERS=""
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.actor }}" != *"${TRUSTED_USERS}"* ]]; then
+            echo "❌ Push diretto su main non permesso per utenti non autorizzati."
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag and calculate new tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LAST_TAG=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+$' | head -n 1)
+          echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+
+          if [ -z "$LAST_TAG" ]; then
+            NEW_TAG="v1.0"
+          else
+            MAJOR=$(echo $LAST_TAG | cut -d. -f1 | tr -d v)
+            MINOR=$(echo $LAST_TAG | cut -d. -f2)
+            NEW_TAG="v${MAJOR}.$((MINOR + 1))"
+          fi
+
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog between tags
+        id: changelog
+        run: |
+          if [ -z "$LAST_TAG" ]; then
+            git log --pretty=format:"- %s (%an)" > changes.txt
+          else
+            git log $LAST_TAG..HEAD --pretty=format:"- %s (%an)" > changes.txt
+          fi
+
+          echo "## $NEW_TAG - $(date +'%Y-%m-%d')" > section.txt
+          cat changes.txt >> section.txt
+          echo "" >> section.txt
+
+      - name: Update CHANGELOG.md
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            cat CHANGELOG.md >> section.txt
+          fi
+          mv section.txt CHANGELOG.md
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "Aggiorna CHANGELOG per $NEW_TAG"
+          git push origin main
+
+      - name: Create new tag
+        run: |
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_tag.outputs.new_tag }}
+          name: Release ${{ steps.get_tag.outputs.new_tag }}
+          body_path: changes.txt
