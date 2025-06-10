@@ -42,7 +42,6 @@ async function fetchAllEvents() {
       return [];
     }
     const eventi = await res.json();
-    console.log(eventi);
     return eventi;
   } catch (err) {
     console.error("Errore di rete fetch /api/events:", err);
@@ -76,12 +75,11 @@ function renderEventi(eventiArray) {
 
 // filtra gli eventi dato il tipo
 async function showEvents(filterType) {
-  const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Devi effettuare il login per accedere a questa pagina.");
-        window.location.href = "./../login/login.html";
-        return;
-      }
+
+  const token = localStorage.getItem("token"); // può essere null
+  const res = await fetch("/api/events", {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
 
   let filtrati;
   switch (filterType) {
@@ -95,13 +93,26 @@ async function showEvents(filterType) {
         sport: "Sport",
         altro: "Altro",
       };
+
+      if (!token) {
+        window.location.href = "./../login/login.html";
+        return;
+      }
+
       const tipoSelezionato = mapTipo[filterType];
-      filtrati = eventi.filter((e) => e.tipo === tipoSelezionato);
+      const eventi = await fetchAllEvents();
+      filtrati = eventi.filter((e) => e.tipoEvento === tipoSelezionato);
       titoloEventi.innerText = `Eventi ${tipoSelezionato}`;
       break;
     }
 
     case "miei": {
+
+      if (!token) {
+        window.location.href = "./../login/login.html";
+        return;
+      }
+
       try {
         const res = await fetch("/api/events/my", {
           method: "GET",
@@ -125,10 +136,7 @@ async function showEvents(filterType) {
         }
 
         const eventi = await res.json();
-        if (eventi.length === 0) {
-          container.innerHTML = "<p>Non hai ancora creato eventi.</p>";
-          return;
-        }
+
         filtrati = eventi;
 
       } catch (err) {
@@ -139,6 +147,12 @@ async function showEvents(filterType) {
     }
 
     case "iscritti": {
+
+      if (!token) {
+        window.location.href = "./../login/login.html";
+        return;
+      }
+
       try {
         const res = await fetch("/api/events/iscritto", {
           method: "GET",
@@ -163,10 +177,7 @@ async function showEvents(filterType) {
         }
 
         const eventi = await res.json();
-        if (eventi.length === 0) {
-          container.innerHTML = "<p>Non sei ancora iscritto ad un evento.</p>";
-          return;
-        }
+
         filtrati = eventi;
 
       } catch (err) {

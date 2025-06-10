@@ -12,7 +12,6 @@ const router = express.Router();
 const { authRequired }      = require('../middleware/auth');
 const { updateController }  = require('../controllers/authController');
 
-
 // POST /api/signup
 router.post('/api/signup', validateEmail, validatePassword, signupController);
 
