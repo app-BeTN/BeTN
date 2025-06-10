@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+  workflow_dispatch: {}
 
 defaults:
   run:
@@ -13,16 +14,13 @@ defaults:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 14.x
 
-      # Questo step esce sempre con 0, confermiamo che la dir sia giusta
       - name: Smoke test working-directory
         run: |
           echo "Current dir: $(pwd)"
@@ -38,11 +36,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      RENDER_TOKEN:   ${{ secrets.RENDER_TOKEN }}
-      SERVICE_ID:     ${{ secrets.RENDER_SERVICE_ID }}
+      RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }}
+      SERVICE_ID:   ${{ secrets.RENDER_SERVICE_ID }}
     steps:
       - uses: actions/checkout@v3
+
       - name: Trigger deploy su Render
+        if: github.event_name == 'push'
         uses: bounceapp/render-action@0.6.0
         with:
           render-token: ${{ env.RENDER_TOKEN }}
