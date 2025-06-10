@@ -34,9 +34,8 @@ async function createEventController(req, res, next) {
 // restituisce tutti gli utenti
 async function listEventsController(req, res, next) {
   try {
-    const userId = getUserIdFromHeader(req);
-    const eventi = await eventService.listEvents(userId);
-    return res.json(eventi);
+    const events = await eventService.listEvents(getUserIdFromHeader(req));
+    return res.status(200).json(events);
   } catch (err) {
     if (createError.isHttpError(err)) {
       return res.status(err.statusCode).json({ message: err.message });
@@ -45,12 +44,70 @@ async function listEventsController(req, res, next) {
   }
 }
 
-// restituisce un evento dato l'id
+// restituisce "i miei eventi"
+async function listMyEventsController(req, res, next) {
+  try {
+    const userId = getUserIdFromHeader(req);
+    const events = await eventService.listMyEvents(userId);
+    return res.status(200).json(events);
+  } catch (err) {
+    if (createError.isHttpError(err)) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
+// restituisce "eventi a cui sei iscritto"
+async function listEventIscrittoController(req, res, next) {
+  try {
+    const userId = getUserIdFromHeader(req);
+    const events = await eventService.listEventIscritto(userId);
+    return res.status(200).json(events);
+  } catch (err) {
+    if (createError.isHttpError(err)) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
+// restituisce dettaglio di un singolo evento
 async function getEventController(req, res, next) {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const event = await eventService.getEventById(id);
-    return res.json(event);
+    return res.status(200).json(event);
+  } catch (err) {
+    if (createError.isHttpError(err)) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
+// modifica evento
+async function updateEventController(req, res, next) {
+  try {
+    const userId = getUserIdFromHeader(req);
+    const id = req.params.id;
+    const updated = await eventService.updateEvent(id, req.body, userId);
+    return res.status(200).json(updated);
+  } catch (err) {
+    if (createError.isHttpError(err)) {
+      return res.status(err.statusCode).json({ message: err.message });
+    }
+    return next(err);
+  }
+}
+
+// cancellazione evento
+async function deleteEventController(req, res, next) {
+  try {
+    const userId = getUserIdFromHeader(req);
+    const id = req.params.id;
+    await eventService.deleteEvent(id, userId);
+    return res.status(204).send();
   } catch (err) {
     if (createError.isHttpError(err)) {
       return res.status(err.statusCode).json({ message: err.message });
@@ -86,6 +143,10 @@ async function iscrivitiController(req, res, next) {
 module.exports = {
   createEventController,
   listEventsController,
+  listMyEventsController,
+  listEventIscrittoController,
   getEventController,
+  updateEventController,
+  deleteEventController,
   iscrivitiController
 };

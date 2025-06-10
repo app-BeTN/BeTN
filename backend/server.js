@@ -25,6 +25,8 @@ app.use('/creaEvento', express.static(path.join(__dirname, './../frontend/creaEv
 app.use('/evento', express.static(path.join(__dirname, './../frontend/evento')));
 app.use('/signup', express.static(path.join(__dirname, './../frontend/signup')));
 app.use('/home', express.static(path.join(__dirname, './../frontend/home')));
+app.use('/editEvento', express.static(path.join(__dirname, './../frontend/editEvento')));
+app.use('/cardsEventi', express.static(path.join(__dirname, './../frontend/cardsEventi')));
 app.use('/style', express.static(path.join(__dirname, './../frontend/style')));
 app.use('/login', express.static(path.join(__dirname, './../frontend/login')));
 app.use('/assets', express.static(path.join(__dirname, './../frontend/assets')));

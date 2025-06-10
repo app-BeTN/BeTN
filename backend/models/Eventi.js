@@ -6,7 +6,7 @@ const eventoSchema = new mongoose.Schema({
   data: { type: Date, required: true },
   ora: { type: String, required: true },
   postiDisponibili: { type: Number, required: true },
-  //creatore: { type: mongoose.Schema.Types.ObjectId, ref: 'Utente', required: true },
+  creatore: { type: mongoose.Schema.Types.ObjectId, ref: 'Utente', required: true },
   luogo: { type: String, required: true },
   /*coordinate: {
     lat: { type: Number, required: true },

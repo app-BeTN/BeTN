@@ -56,8 +56,6 @@ document.getElementById('eventForm').addEventListener('submit', async (e) => {
     const result = await response.json();
 
     if (response.ok) {
-        //const eventId = result.eventId;
-        //window.location.href = `./../evento/evento.html?id=${eventId}`;
         window.location.href = `./../home/home.html`;
     } else {
         alert("Errore nella creazione dell'evento: " + result.message);
