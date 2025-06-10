@@ -1,0 +1,116 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+
+.evento-container {
+  max-width: 600px;
+  margin: auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.evento-container h1 {
+  margin-bottom: 10px;
+}
+
+.evento-container p {
+  margin: 8px 0;
+}
+
+#iscriviti-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#iscriviti-btn:hover {
+  background-color: #0056b3;
+}
+
+#iscriviti-btn:disabled {
+  background-color: #cccccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Se vuoi un’altra classe per “Posti esauriti” */
+.btn-esaurito {
+  background-color: #f44336;   /* rosso per evidenziare “esaurito” */
+  color: #fff;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: none;
+}
+
+#esci-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#esci-btn:hover {
+  background-color: #777;
+}
+
+.btn-esaurito {
+  background-color: #aaa !important;
+  color: #fff !important;
+  cursor: not-allowed;
+}
+
+#elimina-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #dd3838;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#elimina-btn:hover {
+  background-color: #0056b3;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  background: white;
+  padding: 1.5em;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.popup-buttons {
+  margin-top: 1em;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}

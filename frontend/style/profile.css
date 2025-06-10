@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #fff;
+    padding: 48px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.container .title {
+    font-size: 28px;
+    margin-bottom: 32px;
+    color: #222;
+}
+
+.field {
+    text-align: left;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.field label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0 8px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #0066cc;
+    outline: none;
+}
+
+.edit-btn {
+    margin-left: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #333;
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.edit-btn:hover {
+    background-color: #ddd;
+    border-color: #bbb;
+}
+
+.input-error {
+    border-color: #e74c3c !important;
+    background: #fff5f5;
+}
+
+.note {
+    display: block;
+    margin-top: -1px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #555;
+}
+
+.error {
+    display: block;
+    margin-top: -12px;
+    margin-bottom: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #e74c3c;
+}
+
+.tooltip-content {
+    display: block;
+    position: static;
+    margin-top: -12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #e74c3c;
+}
+
+.pwd-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pwd-wrapper input {
+    flex: 1;
+    margin-right: 8px;
+}
+
+.pwd-toggle {
+    position: absolute;
+    top: 50%;
+    right: 38px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pwd-toggle svg {
+    width: 20px;
+    height: 20px;
+    fill: #555;
+    transition: fill 0.2s;
+}
+
+.pwd-toggle:hover svg {
+    fill: #333;
+}
+
+.btn {
+    width: 100%;
+    padding: 16px 0;
+    background: linear-gradient(135deg, #0066cc, #3399ff);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 16px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.field {
+    position: relative;
+}
+
+
+.tooltip-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: -1px;
+    background: transparent;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.tooltip-content+.tooltip-content {
+    margin-top: 0;
+}
+
+.field {
+    margin-bottom: 24px;
+    padding-bottom: 4px;
+}
+
+
+.tooltip-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+}
+
+
+.field {
+    position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 55%;
+  right: 100px;              
+  transform: translateY(-55%);
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: #555;
+  transition: fill 0.2s;
+}
+
+.password-toggle:hover svg {
+  fill: #333;
+}

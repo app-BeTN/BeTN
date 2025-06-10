@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Modifica Profilo – BeTN</title>
+  <link rel="stylesheet" href="../style/profile.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1 class="title">Modifica Profilo</h1>
+      <form id="profile-form" novalidate>
+
+        <div class="field">
+          <label for="nome">Nome</label>
+          <div class="input-group">
+            <input id="nome" type="text" placeholder="Inserisci nome" autocomplete="off" disabled>
+            <button type="button" class="edit-btn" data-target="nome">Modifica</button>
+          </div>
+          <div class="error" id="error-nome"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <div class="input-group">
+            <input id="email" type="email" placeholder="Inserisci email" autocomplete="off" disabled>
+            <button type="button" class="edit-btn" data-target="email">Modifica</button>
+          </div>
+          <div class="error" id="error-email"></div>
+        </div>
+
+        <div class="field" id="piva-field" style="display:none;">
+          <label for="piva">Partita IVA</label>
+          <div class="input-group">
+            <input id="piva" type="text" placeholder="Inserisci partita IVA" autocomplete="off" disabled>
+            <button type="button" class="edit-btn" data-target="piva">Modifica</button>
+          </div>
+          <div class="error" id="error-piva"></div>
+        </div>
+
+        <div class="field">
+          <label for="password">Nuova Password</label>
+          <div class="input-group pwd-wrapper">
+            <input id="password" type="password" placeholder="Inserisci password" disabled>
+            <button type="button" class="password-toggle" data-target="password">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
+                <circle cx="12" cy="12" r="2.5" />
+              </svg>
+            </button>
+            <button type="button" class="edit-btn" data-target="password">Modifica</button>
+          </div>
+          <p class="note">Min 6c, 1 Maiuscola, 1 Numero, 1 Simbolo.</p>
+          <div class="error" id="error-password"></div>
+        </div>
+
+        <button id="save-btn" type="submit" class="btn">Salva Modifiche</button>
+      </form>
+    </div>
+  </div>
+  <script src="./profile.js"></script>
+</body>
+
+</html>
