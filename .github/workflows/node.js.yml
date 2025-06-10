@@ -2,27 +2,19 @@ name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
-  workflow_dispatch: {}
+    branches: [ main ]
 
-defaults:
-  run:
-    working-directory: backend
 jobs:
   test:
     runs-on: ubuntu-latest
 
+    # Qui dichiari l’environment (facoltativo)...
     environment: production
-    
+
+    # …e le variabili d’ambiente lette dai tuoi Secrets
     env:
-      PORT: ${{ secrets.PORT }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASS: ${{ secrets.DB_PASS }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      HOST: ${{ secrets.HOST }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DB_URL: ${{ secrets.DB_URL }}
+      API_KEY: ${{ secrets.API_KEY }}
 
     strategy:
       matrix:
@@ -43,7 +35,7 @@ jobs:
     name: Deploy su Render
     runs-on: ubuntu-latest
     needs: test
-    
+    # Se anche il deploy deve vedere gli stessi env…
     environment: production
     env:
       RENDER_TOKEN: ${{ secrets.RENDER_TOKEN }}
