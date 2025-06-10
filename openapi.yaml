@@ -4,7 +4,7 @@ info:
   description: Documentazione per le API del backend BeTN
   version: 1.0.0
 servers:
-  - url: http://localhost:3006
+  - url: http://localhost:3010
 
 tags:
   - name: Authentication
