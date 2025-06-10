@@ -4,7 +4,6 @@ name: CI & Deploy BeTN
 on:
   push:
     branches:
-      - main
       - develop
   workflow_dispatch: {}
 
