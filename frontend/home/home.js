@@ -61,12 +61,8 @@ document.addEventListener("DOMContentLoaded", async() => {
     localStorage.removeItem('token');
     location.reload();
   }
-  
+
   const cardsContainer = document.getElementById("cards-container");
-  const listaEventiSection = document.getElementById("lista-eventi");
-  const eventiContainer = document.getElementById("eventi-container");
-  const titoloEventi = document.getElementById("titolo-eventi");
-  const btnBack = document.getElementById("back-to-cards");
 
   // mostro subito le card categorie
   showCardsView();
@@ -74,174 +70,44 @@ document.addEventListener("DOMContentLoaded", async() => {
   // listener per ogni card categoria
   document
     .getElementById("card-tutti-eventi")
-    .addEventListener("click", () => showEvents("tutti"));
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/tuttiEventi.html";
+    });
 
   document
     .getElementById("card-eventi-musicali")
-    .addEventListener("click", () => showEvents("musica"));
-
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/eventiMusicali.html";
+    });
   document
     .getElementById("card-eventi-culturali")
-    .addEventListener("click", () => showEvents("cultura"));
-
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/eventiCulturali.html";
+    });
   document
     .getElementById("card-eventi-sportivi")
-    .addEventListener("click", () => showEvents("sport"));
-
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/eventiSportivi.html";
+    });
   document
     .getElementById("card-altri-eventi")
-    .addEventListener("click", () => showEvents("altro"));
-
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/altriEventi.html";
+    });
   document
     .getElementById("card-miei-eventi")
-    .addEventListener("click", () => showEvents("miei"));
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/mieiEventi.html";
+    });
 
   document
     .getElementById("card-eventi-iscritti")
-    .addEventListener("click", () => showEvents("iscritti"));
-
-  // btn “Torna alle categorie”
-  btnBack.addEventListener("click", showCardsView);
-
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/eventiIscritti.html";
+    });
   // visualizzazione card categorie
   function showCardsView() {
     cardsContainer.style.display = "grid";
-    listaEventiSection.style.display = "none";
-  }
-
-  //visualizzazione card eventi
-  function showEventsView() {
-    cardsContainer.style.display = "none";
-    listaEventiSection.style.display = "block";
-  }
-
-  // ritorna l'utente che ha fatto il login
-  async function getCurrentUser() {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-
-    try {
-      const res = await fetch("/api/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      console.error("Errore fetch /api/me:", err);
-      return null;
-    }
-  }
-
-  // ritorna tutti gli eventi pubblici: se effettuato il login anche i privati
-  async function fetchAllEvents() {
-    const token = localStorage.getItem("token");
-    const headers = token
-      ? { Authorization: `Bearer ${token}` }
-      : {};
-
-    try {
-      const res = await fetch("/api/events", { headers });
-      if (!res.ok) {
-        console.error("Errore fetch /eventi:", res.status);
-        return [];
-      }
-      const eventi = await res.json();
-      return eventi;
-    } catch (err) {
-      console.error("Errore di rete fetch /eventi:", err);
-      return [];
-    }
-  }
-
-  // stampa a video tutti gli eventi
-  function renderEventi(eventiArray) {
-    eventiContainer.innerHTML = "";
-    if (eventiArray.length === 0) {
-      eventiContainer.innerHTML = "<p>Nessun evento trovato.</p>";
-      return;
-    }
-
-    eventiArray.forEach((e) => {
-      const cardDiv = document.createElement("div");
-      cardDiv.classList.add("evento-card");
-      cardDiv.innerHTML = `
-        <h3>${e.nome}</h3>
-        <p><strong>Data:</strong> ${new Date(e.data).toLocaleDateString("it-IT")}</p>
-        <p><strong>Luogo:</strong> ${e.luogo}</p>
-        <span class="badge ${e.tipoVisibilita}">${e.tipoVisibilita}</span>
-      `;
-      cardDiv.addEventListener("click", () => {
-        window.location.href = `./../evento/evento.html?id=${e._id}`;
-      });
-
-      eventiContainer.appendChild(cardDiv);
-    });
-  }
-
-  // filtra gli eventi dato il tipo
-  async function showEvents(filterType) {
-    const eventi = await fetchAllEvents();
-
-    let user = null;
-    if (filterType === "miei" || filterType === "iscritti") {
-      user = await getCurrentUser();
-    }
-
-    let filtrati = eventi;
-    switch (filterType) {
-      case "musica":
-      case "cultura":
-      case "sport":
-      case "altro": {
-        const mapTipo = {
-          musica: "Musica",
-          cultura: "Cultura",
-          sport: "Sport",
-          altro: "Altro",
-        };
-        const tipoSelezionato = mapTipo[filterType];
-        filtrati = eventi.filter((e) => e.tipo === tipoSelezionato);
-        titoloEventi.innerText = `Eventi ${tipoSelezionato}`;
-        break;
-      }
-
-      case "miei": {
-        if (!user) {
-          filtrati = [];
-        } else {
-          filtrati = eventi.filter((e) => e.creatoreId === user.id);
-        }
-        titoloEventi.innerText = "I miei eventi";
-        break;
-      }
-
-      case "iscritti": {
-        if (!user) {
-          filtrati = [];
-        } else {
-          filtrati = eventi.filter(
-            (e) =>
-              Array.isArray(e.partecipanti) &&
-              e.partecipanti.includes(user.id)
-          );
-        }
-        titoloEventi.innerText = "Eventi a cui sono iscritto";
-        break;
-      }
-
-      case "tutti":
-      default: {
-        filtrati = eventi;
-        titoloEventi.innerText = "Tutti gli eventi";
-        break;
-      }
-    }
-
-    showEventsView();
-    renderEventi(filtrati);
   }
 });
 
