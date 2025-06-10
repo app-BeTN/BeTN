@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     containerAuth.innerHTML = `
       <button id="statistics-btn" style="display:none;">Statistiche</button>
-      containerAuth.innerHTML = `
       <button id="creaEvento-btn">Crea Evento</button>
       <div id="dropdown">
         <div id="dropdown-header">
