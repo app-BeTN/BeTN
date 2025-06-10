@@ -1,18 +1,17 @@
 name: CI & Deploy BeTN
 
-# Partiamo sia su push (main/develop) sia con "Run workflow"
 on:
   push:
     branches:
       - develop
   workflow_dispatch: {}
 
-# Tutti i comandi npm girano in backend/
+# backend routes di default
 defaults:
   run:
     working-directory: backend
 
-# Inietto qui in alto tutte le env var del backend
+# file env
 env:
   DB_HOST:    ${{ secrets.DB_HOST }}
   DB_NAME:    ${{ secrets.DB_NAME }}
