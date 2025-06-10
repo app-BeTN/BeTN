@@ -1,6 +1,8 @@
 const createError = require('http-errors');
 const eventService = require('../services/eventService');
+const Utente = require('../models/Utenti');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 // restituisce l'id utente
@@ -140,6 +142,39 @@ async function iscrivitiController(req, res, next) {
   }
 }
 
+// disiscrizione di un utente dall'evento
+async function disiscrivitiController(req, res) {
+  const userId = req.user.id;
+  const eventId = req.params.id;
+
+  try {
+    const event = await eventService.getEventById(eventId);
+    if (!event) return res.status(404).json({ message: "Evento non trovato." });
+
+    const index = event.iscritti.indexOf(userId);
+    if (index === -1) {
+      return res.status(400).json({ message: "Non sei iscritto a questo evento." });
+    }
+
+    event.iscritti.splice(index, 1);
+    // decrementa il numero di utenti iscritti
+    event.postiOccupati = Math.max(0, (event.postiOccupati || 0) - 1);
+
+    await event.save();
+
+    // rimuove l'evento anche dalla lista dell'utente
+    await Utente.findByIdAndUpdate(userId, {
+      $pull: { eventiIscritti: new mongoose.Types.ObjectId(eventId) }
+    });
+
+    res.status(200).json({ message: "Disiscrizione avvenuta con successo." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Errore server durante la disiscrizione." });
+  }
+}
+
+
 module.exports = {
   createEventController,
   listEventsController,
@@ -148,5 +183,6 @@ module.exports = {
   getEventController,
   updateEventController,
   deleteEventController,
-  iscrivitiController
+  iscrivitiController,
+  disiscrivitiController
 };

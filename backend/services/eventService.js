@@ -52,7 +52,7 @@ async function listEvents(userId) {
     query = { tipoVisibilita: 'pubblico' };
   }
   try {
-    const events = await Evento.find(query, 'nome data luogo tipoVisibilita');
+    const events = await Evento.find(query, 'nome data luogo tipoEvento tipoVisibilita creatore');
     return events;
   } catch (err) {
     throw createError(500, 'Errore nel recupero degli eventi');

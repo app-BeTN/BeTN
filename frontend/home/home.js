@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async() => {
+document.addEventListener("DOMContentLoaded", async () => {
 
   const token = localStorage.getItem('token');
   const containerAuth = document.getElementById('auth-buttons');
@@ -8,20 +8,18 @@ document.addEventListener("DOMContentLoaded", async() => {
     containerAuth.innerHTML = `<button id="login-btn">Login</button>`;
     document.getElementById('login-btn')
       .addEventListener('click', () => location.href = '../login/login.html');
-    return;
-  }
+  } else {
+    //ritorno dell'utente che ha effettuato il login
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Token non valido');
 
-  //ritorno dell'utente che ha effettuato il login
-  try {
-    const res = await fetch('/api/me', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (!res.ok) throw new Error('Token non valido');
+      const data = await res.json();
+      const userName = data.nome;
 
-    const data = await res.json();
-    const userName = data.nome;
-
-    containerAuth.innerHTML = `
+      containerAuth.innerHTML = `
       <button id="creaEvento-btn">Crea Evento</button>
       <div id="dropdown">
         <div id="dropdown-header">
@@ -55,12 +53,15 @@ document.addEventListener("DOMContentLoaded", async() => {
         </div>
       </div>
     `;
-    initUserDropdown();
-  } catch (err) {
-    console.error(err);
-    localStorage.removeItem('token');
-    location.reload();
+      initUserDropdown();
+    } catch (err) {
+      console.error(err);
+      localStorage.removeItem('token');
+      location.reload();
+    }
   }
+
+  initCardNavigation();
 
   const cardsContainer = document.getElementById("cards-container");
 
@@ -137,5 +138,12 @@ function initUserDropdown() {
     .addEventListener('click', () => {
       localStorage.removeItem('token');
       location.href = 'home.html';
+    });
+}
+
+function initCardNavigation() {
+  document.getElementById("card-tutti-eventi")
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/tuttiEventi.html";
     });
 }

@@ -1,10 +1,8 @@
 // frontend/evento/evento.js
-
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const eventId = params.get("id");
   const token = localStorage.getItem("token");
-  const btn = document.getElementById("iscriviti-btn");
 
   // errore se eventId non è nell'url
   if (!eventId) {
@@ -77,26 +75,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const isAlready = iscrittiArray.includes(userId.toString());
 
-  // se già iscritto si disabilita il btn Iscriviti
-  if (isAlready) {
-    btn.disabled = true;
-    btn.textContent = "Già iscritto";
-    return;
-  }
-
   // se raggiunta la capienza massima si disabilita il btn Iscriviti
   if (event.postiOccupati >= event.postiDisponibili) {
     btn.disabled = true;
     btn.textContent = "Posti esauriti";
     btn.classList.add("btn-esaurito");
-    return;
   }
 
   // POST /api/event/:id/iscriviti per l'iscrizione
-  btn.addEventListener("click", async () => {
+  /*btn.addEventListener("click", async () => {
     btn.disabled = true;
     btn.textContent = "Sto iscrivendo...";
-    
+
     try {
       const signupRes = await fetch(`/api/event/${eventId}/iscriviti`, {
         method: "POST",
@@ -110,14 +100,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (signupRes.ok) {
         // iscrizione effettuata, aggiorno il bottone
         btn.textContent = "Già iscritto";
-        return;
+        //return;
       } else {
         // errore 409 con il messaggio del server
         alert(`Errore: ${signupData.message}`);
         // se già iscritto rimane iscritto
         if (signupRes.status === 409) {
           btn.textContent = "Già iscritto";
-          return;
+          //return;
         }
         // altrimenti riabilito il bottone per riprovare
         btn.disabled = false;
@@ -129,13 +119,94 @@ document.addEventListener("DOMContentLoaded", async () => {
       btn.disabled = false;
       btn.textContent = "Iscriviti";
     }
+  });*/
+
+  let iscritto = event.iscritti.includes(userId);
+  const btn = document.getElementById("iscriviti-btn");
+  btn.textContent = iscritto ? "Disiscrivimi" : "Iscriviti";
+
+  btn.addEventListener("click", async () => {
+    const method = iscritto ? "DELETE" : "POST";
+    try {
+      const response = await fetch(`/api/event/${eventId}/iscriviti`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Errore iscrizione");
+      }
+
+      iscritto = !iscritto;
+      btn.textContent = iscritto ? "Disiscrivimi" : "Iscriviti";
+    } catch (err) {
+      console.error("Errore iscrizione:", err);
+    }
   });
-  
+
+
   // implementazione bottone esci
   const esciBtn = document.getElementById("esci-btn");
   if (esciBtn) {
     esciBtn.addEventListener("click", () => {
-      window.location.href = "./../home/home.html";
+      window.location.href = "./..";
+    });
+  }
+
+  const eliminaBtn = document.getElementById("elimina-btn");
+  if (userId && userId === event.creatore) {
+    eliminaBtn.classList.add("btn");
+    eliminaBtn.style.display = "inline-block";
+    eliminaBtn.addEventListener("click", async () => {
+      const confirmed = await showPopup("Confermi di voler eliminare questo evento?");
+      if (!confirmed) return;
+
+      try {
+        const delRes = await fetch(`/api/events/${eventId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (delRes.ok) {
+          window.location.href = "./..";
+        } else {
+          const errData = await delRes.json();
+          alert(`Errore: ${errData.message}`);
+        }
+      } catch (err) {
+        console.error("Errore delete:", err);
+        alert("Errore di rete, riprova più tardi.");
+      }
     });
   }
 });
+
+function showPopup(message) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "popup-overlay";
+    overlay.innerHTML = `
+      <div class="popup-box">
+        <p>${message}</p>
+        <div class="popup-buttons">
+          <button class="btn" id="confirm-yes">Sì</button>
+          <button class="btn" id="confirm-no">No</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    document.getElementById("confirm-yes").onclick = () => {
+      document.body.removeChild(overlay);
+      resolve(true);
+    };
+
+    document.getElementById("confirm-no").onclick = () => {
+      document.body.removeChild(overlay);
+      resolve(false);
+    };
+  });
+}

@@ -7,7 +7,8 @@ const {
   updateEventController,
   deleteEventController,
   iscrivitiController,
-  listEventIscrittoController
+  listEventIscrittoController,
+  disiscrivitiController
 } = require('../controllers/eventController');
 
 const { authRequired } = require('../middleware/auth');
@@ -16,6 +17,9 @@ const router = express.Router();
 
 // POST /api/event/:id/iscriviti
 router.post('/api/event/:id/iscriviti', authRequired, iscrivitiController);
+
+// POST /api/event/:id/iscriviti
+router.delete('/api/event/:id/iscriviti', authRequired, disiscrivitiController);
 
 // POST /api/events 
 router.post('/api/events', createEventController);

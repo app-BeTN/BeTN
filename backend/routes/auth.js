@@ -25,7 +25,6 @@ const emailLimiter = rateLimit({
   message: { error: 'Too many requests, please try again later.' }
 });
 
-
 // POST /api/signup
 router.post('/api/signup', validateEmail, validatePassword, signupController);
 
