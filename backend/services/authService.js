@@ -7,6 +7,7 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '2h'; // fallback
 
+
 // signup utente
 async function signup(data) {
   const { nome, email, password, tipo, azienda } = data;
@@ -88,9 +89,29 @@ async function updateUser(userId, data) {
   return user;
 }
 
+
+ 
+async function emailExists(email) {
+    const existing = await Utente.findOne({ email });
+    if (existing) {;
+      return false;
+    }
+    return true;
+}
+
+async function uTipo(userId) {
+    const tipo =  Utente.tipo
+    if (tipo==="Azienda") {;
+      return false;
+    }
+    return true;
+}
+
 module.exports = {
   signup,
   loginUser,
-  updateUser,    // ← esportalo
+  updateUser, 
+  uTipo,
+  emailExists,   
 };
 
