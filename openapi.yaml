@@ -25,26 +25,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSignup'
+              $ref: "#/components/schemas/UserSignup"
       responses:
-        '201':
+        "201":
           description: Utente registrato con successo
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
-        '409':
+                $ref: "#/components/schemas/AuthResponse"
+        "409":
           description: Nome utente o email già esistenti
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Errore del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /api/login:
     post:
@@ -56,14 +56,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: "#/components/schemas/LoginRequest"
       responses:
-        '200':
+        "200":
           description: Login eseguito con successo
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: "#/components/schemas/LoginResponse"
 
   /api/check-nome:
     get:
@@ -78,18 +78,18 @@ paths:
             type: string
           description: Nome utente da verificare
       responses:
-        '200':
+        "200":
           description: Esito verifica nome
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CheckNomeResponse'
-        '400':
+                $ref: "#/components/schemas/CheckNomeResponse"
+        "400":
           description: Parametro mancante
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /api/user/{id}:
     put:
@@ -108,26 +108,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSignup'
+              $ref: "#/components/schemas/UserSignup"
       responses:
-        '200':
+        "200":
           description: Utente aggiornato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserInfo'
-        '400':
+                $ref: "#/components/schemas/UserInfo"
+        "400":
           description: Dati non validi
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Utente non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags:
         - Users
@@ -140,18 +140,18 @@ paths:
             type: string
           description: ID dell'utente da eliminare
       responses:
-        '200':
+        "200":
           description: Utente eliminato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
           description: Utente non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /api/events:
     post:
@@ -163,27 +163,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventCreate'
+              $ref: "#/components/schemas/EventCreate"
       responses:
-        '201':
+        "201":
           description: Evento creato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventCreateResponse'
-        '400':
+                $ref: "#/components/schemas/EventCreateResponse"
+        "400":
           description: Dati mancanti o non validi
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Errore server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
+                $ref: "#/components/schemas/ErrorResponse"
 
     get:
       tags:
@@ -192,20 +191,20 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Elenco eventi
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/EventSummary'
-        '500':
+                  $ref: "#/components/schemas/EventSummary"
+        "500":
           description: Errore server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /api/events/{id}:
     get:
@@ -222,24 +221,24 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Dettaglio evento
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventDetail'
-        '404':
+                $ref: "#/components/schemas/EventDetail"
+        "404":
           description: Evento non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Errore server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       tags:
         - Events
@@ -256,26 +255,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EventCreate'
+              $ref: "#/components/schemas/EventCreate"
       responses:
-        '200':
+        "200":
           description: Evento aggiornato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventDetail'
-        '400':
+                $ref: "#/components/schemas/EventDetail"
+        "400":
           description: Dati non validi
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Evento non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags:
         - Events
@@ -290,18 +289,18 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Evento eliminato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '404':
+                $ref: "#/components/schemas/SuccessMessage"
+        "404":
           description: Evento non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /api/event/{id}/iscriviti:
     post:
@@ -318,36 +317,108 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Iscrizione riuscita
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessMessage'
-        '400':
+                $ref: "#/components/schemas/SuccessMessage"
+        "400":
           description: Utente già iscritto o posti esauriti
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
           description: Non autorizzato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
           description: Token non valido
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Evento non trovato
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
+
+    /api/events/my:
+    get:
+      tags:
+        - Events
+      summary: Ottieni lista dei miei eventi
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Elenco dei miei eventi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventSummary"
+        "401":
+          description: Non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/events/iscritto:
+    get:
+      tags:
+        - Events
+      summary: Ottieni lista eventi a cui l'utente è iscritto
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Elenco eventi a cui l'utente è iscritto
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EventSummary"
+        "401":
+          description: Non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /event/{id}:
+    get:
+      tags:
+        - Events
+      summary: Ottieni i dettagli di un evento (alias senza prefisso `/api`)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID evento
+      responses:
+        "200":
+          description: Dettaglio evento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventDetail"
+        "404":
+          description: Evento non trovato
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   securitySchemes:
@@ -482,7 +553,7 @@ components:
 
     EventDetail:
       allOf:
-        - $ref: '#/components/schemas/EventSummary'
+        - $ref: "#/components/schemas/EventSummary"
         - type: object
           properties:
             descrizione:
