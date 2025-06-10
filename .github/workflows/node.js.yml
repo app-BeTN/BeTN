@@ -1,5 +1,6 @@
 name: CI & Deploy BeTN
 
+# permessi
 permissions:
   contents: read
   deployments: write
