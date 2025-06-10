@@ -8,16 +8,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     containerAuth.innerHTML = `<button id="login-btn">Login</button>`;
     document.getElementById('login-btn')
       .addEventListener('click', () => location.href = '../login/login.html');
-  } else {
-    //ritorno dell'utente che ha effettuato il login
-    try {
-      const res = await fetch('/api/me', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Token non valido');
+    return;
+  }
 
-      const data = await res.json();
-      const userName = data.nome;
+  //ritorno dell'utente che ha effettuato il login
+  try {
+    const res = await fetch('/api/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error('Token non valido');
+
+    const data = await res.json();
+    const userName = data.nome;
 
     containerAuth.innerHTML = `
       <button id="statistics-btn" style="display:none;">Statistiche</button>
@@ -63,19 +65,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         location.href = './../statistiche/statistics.html'
       );
     }
+
   } catch (err) {
     console.error(err);
     localStorage.removeItem('token');
     location.reload();
-      initUserDropdown();
-    } catch (err) {
-      console.error(err);
-      localStorage.removeItem('token');
-      location.reload();
-    }
   }
-
-  initCardNavigation();
 
   const cardsContainer = document.getElementById("cards-container");
 
@@ -152,12 +147,5 @@ function initUserDropdown() {
     .addEventListener('click', () => {
       localStorage.removeItem('token');
       location.href = 'home.html';
-    });
-}
-
-function initCardNavigation() {
-  document.getElementById("card-tutti-eventi")
-    .addEventListener("click", () => {
-      window.location.href = "../cardsEventi/tuttiEventi.html";
     });
 }
