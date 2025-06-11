@@ -8,20 +8,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     containerAuth.innerHTML = `<button id="login-btn">Login</button>`;
     document.getElementById('login-btn')
       .addEventListener('click', () => location.href = '../login/login.html');
-    return;
-  }
+  } else {
 
-  //ritorno dell'utente che ha effettuato il login
-  try {
-    const res = await fetch('/api/me', {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (!res.ok) throw new Error('Token non valido');
 
-    const data = await res.json();
-    const userName = data.nome;
 
-    containerAuth.innerHTML = `
+    //ritorno dell'utente che ha effettuato il login
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Token non valido');
+
+      const data = await res.json();
+      const userName = data.nome;
+
+      containerAuth.innerHTML = `
       <button id="statistics-btn" style="display:none;">Statistiche</button>
       <button id="creaEvento-btn">Crea Evento</button>
       <div id="dropdown">
@@ -56,21 +57,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
       </div>
     `;
-    initUserDropdown();
-    // mostra il pulsante solo per utenti “comune”
-    if (data.tipo === 'comune') {
-      const statsBtn = document.getElementById('statistics-btn');
-      statsBtn.style.display = 'inline-block';
-      statsBtn.addEventListener('click', () =>
-        location.href = './../statistiche/statistics.html'
-      );
-    }
+      initUserDropdown();
+      // mostra il pulsante solo per utenti “comune”
+      if (data.tipo === 'comune') {
+        const statsBtn = document.getElementById('statistics-btn');
+        statsBtn.style.display = 'inline-block';
+        statsBtn.addEventListener('click', () =>
+          location.href = './../statistiche/statistics.html'
+        );
+      }
 
-  } catch (err) {
-    console.error(err);
-    localStorage.removeItem('token');
-    location.reload();
+    } catch (err) {
+      console.error(err);
+      localStorage.removeItem('token');
+      location.reload();
+    }
   }
+
+  initCardNavigation();
 
   const cardsContainer = document.getElementById("cards-container");
 
@@ -147,5 +151,12 @@ function initUserDropdown() {
     .addEventListener('click', () => {
       localStorage.removeItem('token');
       location.href = 'home.html';
+    });
+}
+
+function initCardNavigation() {
+  document.getElementById("card-tutti-eventi")
+    .addEventListener("click", () => {
+      window.location.href = "../cardsEventi/tuttiEventi.html";
     });
 }
