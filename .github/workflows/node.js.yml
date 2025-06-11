@@ -1,35 +1,19 @@
 name: CI & Deploy BeTN
 
-# permessi
-permissions:
-  contents: read
-  deployments: write
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch: {}
-
-# backend routes di default
-defaults:
-  run:
-    working-directory: backend
-
-# file env
-env:
-  DB_HOST:    ${{ secrets.DB_HOST }}
-  DB_NAME:    ${{ secrets.DB_NAME }}
-  DB_USER:    ${{ secrets.DB_USER }}
-  DB_PASS:    ${{ secrets.DB_PASS }}
-  HOST:       ${{ secrets.HOST }}
-  JWT_SECRET: ${{ secrets.JWT_SECRET }}
-  PORT:       ${{ secrets.PORT }}
 
 jobs:
   test:
-    name: Test & Build
     runs-on: ubuntu-latest
+
+    # Ogni run() di seguito verrà eseguito in `backend/`
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,25 +25,24 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        # qui ci assicuriamo che backend/package.json + package-lock.json vengano letti
         run: npm ci
 
       - name: Build (if-needed)
         run: npm run build --if-present
 
-      - name: Skip tests (no script defined
+      - name: Skip tests (no script defined)
         run: echo "Skipping tests"
 
   deploy:
-    name: Deploy to Render
     needs: test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Trigger deploy on Render
-        if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+      - name: Trigger deploy su Render
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: bounceapp/render-action@0.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
