@@ -4,6 +4,14 @@
 - Riccardo Bassan - unitn mail: riccardo.bassan@studenti.unitn.it - ID: 238793
 - Andrea Costantino - unitn mail: andrea.costantino-1@studenti.unitn.it - ID: 237768
 
+### ACCESSO ALLA WEB APP
+
+- Render: https://betn-qt7a.onrender.com
+- Account 
+   admin:  email: comuneditrento@gmail.com    password: Comune1@
+   utente:  email: utenteprova@gmail.com          password: Prova1@
+
+
 ### ESECUZIONE DEL CODICE PER PROVARE LE API CON SWAGGER
 
 ### Tools and Libraries
